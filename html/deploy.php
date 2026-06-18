@@ -3,7 +3,7 @@
 // Coloca este archivo en el servidor y configura el webhook en GitHub
 // apuntando a: https://tudominio.com/fhbrestaurant/web/html/deploy.php
 
-define('DEPLOY_SECRET', 'CAMBIA_ESTO_POR_UNA_CLAVE_SECRETA');
+define('DEPLOY_SECRET', '4e99e49fd29113de4a1dc362ca8392c58d88241dac888117d2120d94678e2afc');
 define('REPO_PATH',     'C:/Users/administrator/Yael');
 
 // Solo aceptar POST de GitHub
