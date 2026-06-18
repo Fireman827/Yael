@@ -4,7 +4,7 @@
 // apuntando a: https://tudominio.com/fhbrestaurant/web/html/deploy.php
 
 define('DEPLOY_SECRET', 'CAMBIA_ESTO_POR_UNA_CLAVE_SECRETA');
-define('REPO_PATH',     'C:/ruta/al/repo/clonado');  // ajusta esta ruta en el servidor
+define('REPO_PATH',     'C:/Users/administrator/Yael');
 
 // Solo aceptar POST de GitHub
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
