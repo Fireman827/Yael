@@ -1,0 +1,298 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/* =========================================================
+   MARCAR NOTIFICACIÓN COMO LEÍDA
+========================================================= */
+if (!function_exists('MarcarNotificacionLeida')) {
+
+function MarcarNotificacionLeida($idNotificacion){
+    $CI =& get_instance();
+    $CI->load->database();
+
+    return $CI->db
+        ->where('idNotificacion', $idNotificacion)
+        ->update('notificaciones', ['estado' => 'leida']);
+}
+}
+
+/* =========================================================
+   ENVÍO DE CORREO (SMTP PRINCIPAL)
+========================================================= */
+if (!function_exists('EnviarCorreoNotificacion')) {
+
+function EnviarCorreoNotificacion($para, $asunto, $mensaje){
+
+    $CI =& get_instance();
+    $CI->load->library('email');
+    $CI->load->config('email');
+
+    $CI->email->clear();
+    $CI->email->from(
+        $CI->config->item('smtp_user'),
+        'Sistema de Notificaciones'
+    );
+
+    $CI->email->to($para);
+    $CI->email->subject($asunto);
+    $CI->email->message($mensaje);
+
+    if(!$CI->email->send()){
+        log_message('error', $CI->email->print_debugger());
+        return false;
+    }
+
+    return true;
+}
+if (!function_exists('EnviarCorreoUnaVez')) {
+
+function EnviarCorreoUnaVez($tipo, $referencia, $para, $asunto, $html){
+
+    $ci =& get_instance();
+
+    // ¿Ya existe notificación pendiente?
+    $existe = $ci->db
+        ->where('tipo', $tipo)
+        ->like('mensaje', (string)$referencia)
+        ->where('estado', 'pendiente')
+        ->count_all_results('notificaciones');
+
+    if ($existe > 0) {
+        return false; // 🚫 Ya se envió
+    }
+
+    // Enviar correo
+    if (!EnviarCorreoNotificacion($para, $asunto, $html)) {
+        return false;
+    }
+
+    return true; // ✔️ Enviado correctamente
+}
+}
+
+}
+
+
+/* =========================================================
+   CREAR NOTIFICACIÓN
+========================================================= */
+if (!function_exists('CrearNotificacion')) {
+
+function CrearNotificacion($tipo, $titulo, $mensaje, $url = null, $idUsuario = null){
+
+    $CI =& get_instance();
+
+    /* =============================
+       INSERTAR NOTIFICACIÓN
+    ============================== */
+    $data = [
+        'tipo'          => $tipo,
+        'titulo'        => $titulo,
+        'mensaje'       => $mensaje,
+        'url'           => $url,
+        'idUsuario'     => $idUsuario, // puede ser NULL
+        'estado'        => 'pendiente',
+        'correoEnviado' => 0,
+        'fecha'         => date('Y-m-d H:i:s')
+    ];
+
+    $CI->db->insert('notificaciones', $data);
+    $idNotificacion = $CI->db->insert_id();
+
+    /* =============================
+       ENVÍO DE CORREO (UNA SOLA VEZ)
+    ============================== */
+    if ($idNotificacion && function_exists('EnviarCorreoNotificacion')) {
+
+        // Usuario destino
+        if (!empty($idUsuario)) {
+            $usuario = $CI->db
+                ->where('idUsuario', $idUsuario)
+                ->get('usuario')
+                ->row();
+        } else {
+            // Admin por defecto
+            $usuario = $CI->db
+                ->where('admin', 1)
+                ->where('estadoUsuario', 'Activo')
+                ->get('usuario')
+                ->row();
+        }
+
+        if (!empty($usuario) && !empty($usuario->correoUsuario)) {
+
+           $contenidoHtml = "<p>{$mensaje}</p>";
+
+if (!empty($url)) {
+    $contenidoHtml .= "
+        <p>
+            <a href='".base_url($url)."'
+               style='background:#007bff;color:#fff;padding:10px 15px;
+               text-decoration:none;border-radius:4px'>
+               Ver detalle
+            </a>
+        </p>";
+}
+
+$mensajeHTML = plantillaCorreoBase($titulo, $contenidoHtml);
+
+
+            $enviado = EnviarCorreoNotificacion(
+                $usuario->correoUsuario,
+                $titulo,
+                $mensajeHTML
+            );
+
+            if ($enviado) {
+                $CI->db
+                    ->where('idNotificacion', $idNotificacion)
+                    ->update('notificaciones', ['correoEnviado' => 1]);
+            }
+        }
+    }
+
+    return $idNotificacion;
+}
+
+}
+
+
+/* =========================================================
+   CONTAR NOTIFICACIONES PENDIENTES
+========================================================= */
+if (!function_exists('ContarNotificacionesPendientes')) {
+
+function ContarNotificacionesPendientes($idUsuario){
+
+    $ci =& get_instance();
+    $ci->db->where('estado', 'pendiente');
+
+    $ci->db->group_start()
+           ->where('idUsuario', $idUsuario)
+           ->or_where('idUsuario IS NULL', null, false)
+           ->group_end();
+
+    return $ci->db->count_all_results('notificaciones');
+}
+}
+
+/* =========================================================
+   OBTENER NOTIFICACIONES PENDIENTES
+========================================================= */
+if (!function_exists('ObtenerNotificacionesPendientes')) {
+
+function ObtenerNotificacionesPendientes($idUsuario){
+
+    $ci =& get_instance();
+    $ci->db->where('estado', 'pendiente');
+
+    if ($idUsuario){
+        $ci->db->group_start()
+               ->where('idUsuario', $idUsuario)
+               ->or_where('idUsuario IS NULL', null, false)
+               ->group_end();
+			
+			$ci->db->order_by('fecha', 'DESC');
+			$ci->db->limit(10);
+
+    return $ci->db
+        ->order_by('fecha', 'DESC')
+        ->get('notificaciones')
+        ->result();
+}
+}
+
+/* =========================================================
+   STOCK BAJO (INSUMO + INSUMOSTOCK)
+========================================================= */
+if (!function_exists('ProcesarStockBajo')) {
+
+function ProcesarStockBajo(){
+
+    $ci =& get_instance();
+
+    $sql = "
+        SELECT 
+            i.idInsumo,
+            i.nombreInsumo,
+            i.stockMinimoInsumo,
+            IFNULL(SUM(s.cantidadInsumoStock),0) AS stockActual
+        FROM insumo i
+        LEFT JOIN insumostock s 
+            ON s.idInsumo = i.idInsumo
+            AND s.estadoInsumoStock = 'Activo'
+        GROUP BY i.idInsumo
+        HAVING stockActual <= i.stockMinimoInsumo
+    ";
+
+    $insumos = $ci->db->query($sql)->result();
+
+    if (empty($insumos)) return;
+
+    foreach ($insumos as $i){
+
+        $existe = $ci->db
+            ->where('tipo', 'stock_bajo')
+            ->where('referencia_id', $i->idInsumo)
+            ->where('estado', 'pendiente')
+            ->get('notificaciones')
+            ->row();
+
+        if ($existe) continue;
+
+        CrearNotificacion(
+            'stock_bajo',
+            'Stock bajo',
+            "El insumo {$i->nombreInsumo} tiene stock {$i->stockActual} (mínimo {$i->stockMinimoInsumo})",
+            'InsumosEditar/' . md5($i->idInsumo),
+            null
+        );
+		
+		if (EnviarCorreoUnaVez(
+        'stock_bajo',
+        $i->idInsumo,
+        'correo@empresa.com',
+        'Stock bajo: '.$i->nombreInsumo,
+        $html
+)) {
+
+    CrearNotificacion(
+        'stock_bajo',
+        'Stock bajo',
+        "El insumo {$i->nombreInsumo} tiene stock {$i->stockActual}",
+        'Insumos',
+        null
+    );
+}
+
+    }
+}
+
+if (!function_exists('plantillaCorreoBase')) {
+
+function plantillaCorreoBase($titulo, $contenidoHtml){
+    return "
+    <table width='100%' style='font-family:Arial'>
+        <tr style='background:#c0392b;color:#fff'>
+            <td style='padding:15px'>
+                <h2>$titulo</h2>
+            </td>
+        </tr>
+        <tr>
+            <td style='padding:15px'>
+                $contenidoHtml
+            </td>
+        </tr>
+        <tr style='background:#eee'>
+            <td style='padding:10px;font-size:12px'>
+                Sistema FHB – Notificación automática
+            </td>
+        </tr>
+    </table>
+    ";
+}
+
+}
+
+}
+}

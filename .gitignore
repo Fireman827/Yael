@@ -1,0 +1,23 @@
+# Configuración con credenciales — cada entorno tiene la suya
+html/application/config/database.php
+
+# Logs del sistema
+html/application/logs/
+
+# Respaldos de BD (pueden pesar mucho)
+html/db/respaldo/
+
+# Archivos subidos por usuarios
+html/uploads/
+
+# Cache de CodeIgniter
+html/application/cache/
+
+# phpMyAdmin — herramienta de administración, no es parte del proyecto
+html/phpMyAdmin/
+
+# Archivos temporales del sistema
+Thumbs.db
+.DS_Store
+*.tmp
+*.save
