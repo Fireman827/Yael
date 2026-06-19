@@ -28,7 +28,7 @@ class Online extends CI_Controller {
     private function _verificarSesion() {
         $sesion = $this->session->userdata('online_cliente');
         if (!$sesion || empty($sesion['idClienteAcceso'])) {
-            redirect('pedidos/login');
+            redirect('login');
             return false;
         }
         return $sesion;
@@ -152,7 +152,7 @@ class Online extends CI_Controller {
     // ==============================================================
     public function login() {
         if ($this->session->userdata('online_cliente')) {
-            redirect('pedidos/menu'); return;
+            redirect('menu'); return;
         }
         if ($this->input->method(TRUE) == 'POST') {
             $accion = $this->input->post('accion') ?: 'login';
@@ -161,17 +161,17 @@ class Online extends CI_Controller {
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $this->session->set_flashdata('error', 'Correo electrónico no válido.');
-                redirect('pedidos/login'); return;
+                redirect('login'); return;
             }
 
             $acceso = $this->Online_model->TraerAccesoPorEmail($email);
             if (!$acceso || !password_verify($pass, $acceso->passwordAcceso)) {
                 $this->session->set_flashdata('error', 'Correo o contraseña incorrectos.');
-                redirect('pedidos/login'); return;
+                redirect('login'); return;
             }
             if ($acceso->estadoAcceso !== 'Activo') {
                 $this->session->set_flashdata('error', 'Tu cuenta está inactiva. Contacta al restaurante.');
-                redirect('pedidos/login'); return;
+                redirect('login'); return;
             }
 
             $cliente = $this->Online_model->TraerClientePOS($acceso->idClienteRef);
@@ -188,7 +188,7 @@ class Online extends CI_Controller {
                 'direccion'       => $cliente ? $cliente->direccionCliente : '',
             ));
             $this->session->set_userdata('online_carrito', array());
-            redirect('pedidos/menu'); return;
+            redirect('menu'); return;
         }
 
         $this->load->view('online/login', array(
@@ -203,7 +203,7 @@ class Online extends CI_Controller {
     // ==============================================================
     public function registro() {
         if ($this->session->userdata('online_cliente')) {
-            redirect('pedidos/menu'); return;
+            redirect('menu'); return;
         }
 
         if ($this->input->method(TRUE) == 'POST') {
@@ -243,7 +243,7 @@ class Online extends CI_Controller {
 
             if (!$error && $this->Online_model->TraerAccesoPorEmail($email)) {
                 $this->session->set_flashdata('info', 'Ya tienes una cuenta. Inicia sesión o recupera tu contraseña para continuar tu pedido.');
-                redirect('pedidos/login');
+                redirect('login');
                 return;
             }
 
@@ -350,7 +350,7 @@ class Online extends CI_Controller {
                 'telefono'        => $telefono,
                 'direccion'       => $direccionEntrega,
             ));
-            redirect('pedidos/verificar');
+            redirect('verificar');
             return;
         }
 
@@ -402,13 +402,13 @@ class Online extends CI_Controller {
     // ===========================================================
     public function verificar() {
         $pending = $this->session->userdata('online_otp_pending');
-        if (!$pending) { redirect('pedidos/login'); return; }
+        if (!$pending) { redirect('login'); return; }
 
         if ($this->input->method(TRUE) == "POST") {
             $otp = trim($this->input->post('otp'));
             if (!$this->Online_model->VerificarOTP($pending['idClienteAcceso'], $otp)) {
                 $this->session->set_flashdata('error', 'Código incorrecto o expirado.');
-                redirect('pedidos/verificar');
+                redirect('verificar');
                 return;
             }
             $this->Online_model->MarcarVerificado($pending['idClienteAcceso']);
@@ -422,7 +422,7 @@ class Online extends CI_Controller {
                 'direccion'       => $pending['direccion'],
             ));
             $this->session->set_userdata('online_carrito', array());
-            redirect('pedidos/menu');
+            redirect('menu');
             return;
         }
 
@@ -439,12 +439,12 @@ class Online extends CI_Controller {
     // ===========================================================
     public function reenviar_otp() {
         $pending = $this->session->userdata('online_otp_pending');
-        if (!$pending) { redirect('pedidos/login'); return; }
+        if (!$pending) { redirect('login'); return; }
         $otp = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
         $this->Online_model->GuardarOTP($pending['idClienteAcceso'], $otp);
         $this->_enviarOtp($pending['telefono'], $otp);
         $this->session->set_flashdata('info', 'Código reenviado.');
-        redirect('pedidos/verificar');
+        redirect('verificar');
     }
 
     // ===========================================================
@@ -560,7 +560,7 @@ class Online extends CI_Controller {
     public function checkout() {
         $sesion  = $this->_verificarSesion();
         $carrito = $this->session->userdata('online_carrito') ?: array();
-        if (empty($carrito)) { redirect('pedidos/menu'); return; }
+        if (empty($carrito)) { redirect('menu'); return; }
 
         $total = array_sum(array_map(function($i) {
             return $i['precio'] * $i['cantidad'];
@@ -779,7 +779,7 @@ class Online extends CI_Controller {
     public function confirmacion() {
         $sesion       = $this->_verificarSesion();
         $ultimoPedido = $this->session->userdata('online_ultimo_pedido');
-        if (!$ultimoPedido) { redirect('pedidos/menu'); return; }
+        if (!$ultimoPedido) { redirect('menu'); return; }
 
         $this->load->view('online/confirmacion', array(
             'titulo'      => '¡Pedido confirmado!',
@@ -838,7 +838,7 @@ class Online extends CI_Controller {
                 }
             }
             $this->session->set_flashdata('info', 'Si el correo existe, recibirás un código en WhatsApp.');
-            redirect('pedidos/recuperar');
+            redirect('recuperar');
             return;
         }
         $this->load->view('online/recuperar', array(
@@ -851,20 +851,20 @@ class Online extends CI_Controller {
     }
 
     public function nueva_password() {
-        if ($this->input->method(TRUE) != "POST") { redirect('pedidos/recuperar'); return; }
+        if ($this->input->method(TRUE) != "POST") { redirect('recuperar'); return; }
         $idAcceso  = (int)$this->session->userdata('online_recuperar_id');
         $otp       = trim($this->input->post('otp'));
         $password  = $this->input->post('password');
         $password2 = $this->input->post('password2');
-        if (!$idAcceso) { redirect('pedidos/recuperar'); return; }
+        if (!$idAcceso) { redirect('recuperar'); return; }
         if ($password !== $password2 || strlen($password) < 6) {
             $this->session->set_flashdata('error', 'Las contraseñas no coinciden o son muy cortas.');
-            redirect('pedidos/recuperar');
+            redirect('recuperar');
             return;
         }
         if (!$this->Online_model->VerificarOTP($idAcceso, $otp)) {
             $this->session->set_flashdata('error', 'Código incorrecto o expirado.');
-            redirect('pedidos/recuperar');
+            redirect('recuperar');
             return;
         }
         $this->Online_model->ActualizarAcceso(
@@ -874,7 +874,7 @@ class Online extends CI_Controller {
         );
         $this->session->unset_userdata('online_recuperar_id');
         $this->session->set_flashdata('info', '✅ Contraseña cambiada. Ya puedes iniciar sesión.');
-        redirect('pedidos/login');
+        redirect('login');
     }
 
     // ===========================================================
@@ -885,7 +885,7 @@ class Online extends CI_Controller {
         $this->session->unset_userdata('online_carrito');
         $this->session->unset_userdata('online_ultimo_pedido');
         $this->session->unset_userdata('online_otp_pending');
-        redirect('pedidos/login');
+        redirect('login');
     }
 
 	// ==========================================================
@@ -1053,6 +1053,7 @@ class Online extends CI_Controller {
 
 }
 /* End of file Online.php */
+
 
 
 
