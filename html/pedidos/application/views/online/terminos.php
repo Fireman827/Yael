@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -100,3 +100,4 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+

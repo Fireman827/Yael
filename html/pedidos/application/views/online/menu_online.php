@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -96,8 +96,8 @@ body{background:var(--black);color:var(--text);font-family:'Segoe UI',sans-serif
   <div class="user-chip">
     <div class="avatar"><?= strtoupper(substr($sesion['nombre'], 0, 2)) ?></div>
     <span style="font-size:13px"><?= htmlspecialchars(explode(' ', $sesion['nombre'])[0]) ?></span>
-    <a href="<?= site_url('pedidos/perfil') ?>" class="btn-link-sm">perfil</a>
-    <a href="<?= site_url('pedidos/logout') ?>" class="btn-link-sm">salir</a>
+    <a href="<?= site_url('perfil') ?>" class="btn-link-sm">perfil</a>
+    <a href="<?= site_url('logout') ?>" class="btn-link-sm">salir</a>
   </div>
 </div>
 
@@ -110,7 +110,7 @@ body{background:var(--black);color:var(--text);font-family:'Segoe UI',sans-serif
 
 <div class="cat-bar">
   <?php if ($categorias): foreach ($categorias as $cat): ?>
-  <a href="<?= site_url('pedidos/menu?cat=' . $cat->idProductoCategoria) ?>"
+  <a href="<?= site_url('menu?cat=' . $cat->idProductoCategoria) ?>"
      class="cat-pill <?= ($catActiva == $cat->idProductoCategoria) ? 'active' : '' ?>">
     <?= htmlspecialchars($cat->nombreProductoCategoria) ?>
   </a>
@@ -211,13 +211,13 @@ var modalProdId= null;
 var modalCant  = 1;
 
 function cambiarCantidad(idProducto, accion) {
-  $.post(siteUrl+'Online/agregar_carrito',
+  $.post(siteUrl+'agregar_carrito',
     {idProducto:idProducto, accion:accion, csrf_token_id:$('#csrf_token_id').val()},
     function(r){ if(r.codigo==200){ carrito=r.carrito; actualizarQty(idProducto,r); actualizarCartBar(r.totalItems,r.totalPrecio); } },'json');
 }
 
 function eliminarItem(idProducto) {
-  $.post(siteUrl+'Online/agregar_carrito',
+  $.post(siteUrl+'agregar_carrito',
     {idProducto:idProducto, accion:'delete', csrf_token_id:$('#csrf_token_id').val()},
     function(r){ if(r.codigo==200){ carrito=r.carrito; $('#qty-'+idProducto).text(0); actualizarCartBar(r.totalItems,r.totalPrecio); if(drawerAbierto) renderDrawer(); } },'json');
 }
@@ -240,7 +240,7 @@ function actualizarCartBar(items, total) {
   }
 }
 
-function irCheckout(){ window.location.href = siteUrl+'pedidos/checkout'; }
+function irCheckout(){ window.location.href = siteUrl+'checkout'; }
 
 /* ── Drawer ── */
 var drawerAbierto = false;
@@ -309,9 +309,9 @@ function agregarDesdeModal() {
   var btn = document.getElementById('btnAdd');
   btn.disabled = true; btn.textContent = 'Agregando...';
   var reqs = [];
-  for(var i=0;i<modalCant;i++) reqs.push($.post(siteUrl+'Online/agregar_carrito',{idProducto:modalProdId,accion:'add',csrf_token_id:$('#csrf_token_id').val()},null,'json'));
+  for(var i=0;i<modalCant;i++) reqs.push($.post(siteUrl+'agregar_carrito',{idProducto:modalProdId,accion:'add',csrf_token_id:$('#csrf_token_id').val()},null,'json'));
   $.when.apply($, reqs).always(function(){
-    $.post(siteUrl+'Online/carrito',{csrf_token_id:$('#csrf_token_id').val()},function(r){
+    $.post(siteUrl+'carrito',{csrf_token_id:$('#csrf_token_id').val()},function(r){
       if(r.codigo==200){ carrito=r.carrito; $('#qty-'+modalProdId).text(0); r.carrito.forEach(function(i){if(i.idProducto==modalProdId)$('#qty-'+modalProdId).text(i.cantidad);}); actualizarCartBar(r.totalItems,r.totalPrecio); }
       btn.textContent='✅ ¡Agregado!'; setTimeout(function(){cerrarModal();},700);
     },'json');

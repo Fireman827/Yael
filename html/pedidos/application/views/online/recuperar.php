@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+﻿<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -40,7 +40,7 @@
   <?php if ($paso == 1): ?>
     <!-- Paso 1: pedir email -->
     <p style="color:#aaa;font-size:13px;margin-bottom:1rem">Ingresa tu correo y te enviamos un código de verificación por WhatsApp.</p>
-    <form method="POST" action="<?= site_url('pedidos/recuperar') ?>">
+    <form method="POST" action="<?= site_url('recuperar') ?>">
       <?= form_hidden('csrf_token_id', $this->security->get_csrf_hash()) ?>
       <div class="mb-3">
         <label class="form-label">Correo electrónico</label>
@@ -58,7 +58,7 @@
       </div>
     <?php endif; ?>
     <p style="color:#aaa;font-size:13px;margin-bottom:1rem">Ingresa el código que recibiste por WhatsApp y tu nueva contraseña.</p>
-    <form method="POST" action="<?= site_url('pedidos/nueva_password') ?>">
+    <form method="POST" action="<?= site_url('nueva_password') ?>">
       <?= form_hidden('csrf_token_id', $this->security->get_csrf_hash()) ?>
       <label class="form-label" style="display:block;text-align:center">Código de verificación</label>
       <div class="otp-row">

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -128,8 +128,8 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
   </div>
   <?php endif; ?>
 
-  <a href="<?= site_url('pedidos/menu') ?>" class="btn-primary-fhb">🍔 Hacer otro pedido</a>
-  <a href="<?= site_url('pedidos/cuenta') ?>" class="btn-secondary-fhb">Ver mis pedidos</a>
+  <a href="<?= site_url('menu') ?>" class="btn-primary-fhb">🍔 Hacer otro pedido</a>
+  <a href="<?= site_url('cuenta') ?>" class="btn-secondary-fhb">Ver mis pedidos</a>
 </div>
 
 <input type="hidden" id="csrf_token_id" value="<?= $this->security->get_csrf_hash() ?>">

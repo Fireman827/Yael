@@ -1,4 +1,4 @@
-<!-- ============================================================
+﻿<!-- ============================================================
      Aviso de cookies / almacenamiento local
      Incluir antes de </body> en cada vista de pedidos en línea.
      ============================================================ -->
@@ -13,7 +13,7 @@
     🍪 Usamos cookies y almacenamiento local para mantener tu sesión, tu carrito y
     recordar tus preferencias. Con tu permiso, también podemos usar tu ubicación
     para validar zonas de entrega. Más información en nuestra
-    <a href="<?= site_url('pedidos/terminos') ?>" target="_blank" style="color:#ff8a7a">Política de Privacidad</a>.
+    <a href="<?= site_url('terminos') ?>" target="_blank" style="color:#ff8a7a">Política de Privacidad</a>.
   </div>
   <div style="display:flex; gap:8px; flex-shrink:0">
     <button onclick="fhbCookieConsent('rechazado')" style="
@@ -41,3 +41,4 @@ function fhbCookieConsent(valor) {
   if (b) b.style.display = 'none';
 }
 </script>
+

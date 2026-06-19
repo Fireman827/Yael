@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -34,7 +34,7 @@ hr{border-color:var(--border)}
 <body>
 
 <div class="top-bar">
-  <a href="<?= site_url('pedidos/menu') ?>" class="btn-back">← Menú</a>
+  <a href="<?= site_url('menu') ?>" class="btn-back">← Menú</a>
   <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="" onerror="this.style.display='none'">
   <span class="top-title">Mi Perfil</span>
 </div>
@@ -121,7 +121,7 @@ hr{border-color:var(--border)}
     <?php endif; ?>
     <?php if ($pedidos && count($pedidos) > 5): ?>
     <div class="text-center mt-2">
-      <a href="<?= site_url('pedidos/cuenta') ?>" style="font-size:13px;color:var(--red)">Ver todos mis pedidos →</a>
+      <a href="<?= site_url('cuenta') ?>" style="font-size:13px;color:var(--red)">Ver todos mis pedidos →</a>
     </div>
     <?php endif; ?>
   </div>
@@ -201,3 +201,4 @@ function cambiarPassword() {
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+

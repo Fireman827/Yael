@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -39,7 +39,7 @@ hr{border-color:var(--border);margin:.75rem 0}
       <div class="alert-err"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="<?= site_url('pedidos/registro') ?>">
+    <form method="POST" action="<?= site_url('registro') ?>">
       <?= form_hidden('csrf_token_id', $this->security->get_csrf_hash()) ?>
 
       <!-- DATOS PERSONALES -->
@@ -154,7 +154,7 @@ hr{border-color:var(--border);margin:.75rem 0}
 
       <p style="font-size:12px;color:var(--muted);text-align:center;line-height:1.5">
         Al crear tu cuenta aceptas nuestros
-        <a href="<?= site_url('pedidos/terminos') ?>" target="_blank" class="link-red">Términos y Política de Privacidad</a>
+        <a href="<?= site_url('terminos') ?>" target="_blank" class="link-red">Términos y Política de Privacidad</a>
         para pedidos en línea.
       </p>
 
@@ -164,7 +164,7 @@ hr{border-color:var(--border);margin:.75rem 0}
     <hr>
     <div class="text-center">
       <span style="font-size:13px;color:var(--muted)">¿Ya tienes cuenta? </span>
-      <a href="<?= site_url('pedidos/login') ?>" class="link-red">Iniciar sesión</a>
+      <a href="<?= site_url('login') ?>" class="link-red">Iniciar sesión</a>
     </div>
   </div>
 </div>
@@ -182,3 +182,4 @@ document.querySelector('[name=departamentoCliente]').addEventListener('change', 
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -70,7 +70,7 @@ textarea.form-control{resize:none}
 <body>
 
 <div class="top-bar">
-  <a href="<?= site_url('pedidos/menu') ?>" class="btn-back">← Menú</a>
+  <a href="<?= site_url('menu') ?>" class="btn-back">← Menú</a>
   <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="" onerror="this.style.display='none'">
   <span class="top-title">Confirmar pedido</span>
 </div>
@@ -117,7 +117,7 @@ $chivoQR      = _cfgPago('PAGO_CHIVO_QR');
     <div class="info-row"><span>Teléfono</span><span><?= htmlspecialchars($sesion['telefono']) ?></span></div>
     <div class="info-row"><span>Dirección</span><span><?= htmlspecialchars($sesion['direccion']) ?></span></div>
     <div style="text-align:right;margin-top:4px">
-      <a href="<?= site_url('pedidos/perfil') ?>" style="font-size:12px;color:var(--red)">✏️ Editar mis datos</a>
+      <a href="<?= site_url('perfil') ?>" style="font-size:12px;color:var(--red)">✏️ Editar mis datos</a>
     </div>
   </div>
 
@@ -223,14 +223,14 @@ $chivoQR      = _cfgPago('PAGO_CHIVO_QR');
 
   <label class="terminos-box">
     <input type="checkbox" id="chkTerminos">
-    <span>He leído y acepto los <a href="<?= site_url('pedidos/terminos') ?>" target="_blank">Términos y Condiciones y la Política de Privacidad</a> de los pedidos en línea (uso de mis datos, tiempos de entrega y proceso de pago).</span>
+    <span>He leído y acepto los <a href="<?= site_url('terminos') ?>" target="_blank">Términos y Condiciones y la Política de Privacidad</a> de los pedidos en línea (uso de mis datos, tiempos de entrega y proceso de pago).</span>
   </label>
 
   <button class="btn-confirm" id="btnConfirmar" onclick="confirmarPedido()" <?= $horario['abierto'] ? '' : 'disabled' ?>>
     <?= $horario['abierto'] ? 'Confirmar pedido — $' . $total : '🕒 Cerrado por ahora' ?>
   </button>
   <div class="text-center mt-3">
-    <a href="<?= site_url('pedidos/menu') ?>" style="font-size:13px;color:var(--muted)">← Volver al menú</a>
+    <a href="<?= site_url('menu') ?>" style="font-size:13px;color:var(--muted)">← Volver al menú</a>
   </div>
 </div>
 

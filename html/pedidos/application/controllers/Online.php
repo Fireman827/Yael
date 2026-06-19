@@ -453,7 +453,8 @@ class Online extends CI_Controller {
     // ===========================================================
     public function menu() {
         $sesion     = $this->_verificarSesion();
-        $idSucursal = 1;
+        $suc = $this->db->select('idSucursal')->order_by('idSucursal','ASC')->limit(1)->get('sucursal')->row();
+        $idSucursal = $suc ? (int)$suc->idSucursal : 1;
         $categorias = $this->Online_model->TraerCategoriasMenu($idSucursal);
 
         // Si no se especifica categoría, usar la primera disponible

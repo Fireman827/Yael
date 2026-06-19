@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -45,7 +45,7 @@ hr{border-color:var(--border);margin:1rem 0}
       <div class="alert-err"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="<?= site_url('pedidos/login') ?>">
+    <form method="POST" action="<?= site_url('login') ?>">
       <?= form_hidden('csrf_token_id', $this->security->get_csrf_hash()) ?>
       <input type="hidden" name="accion" value="login">
       <div class="mb-3">
@@ -60,10 +60,10 @@ hr{border-color:var(--border);margin:1rem 0}
     </form>
 
     <div class="text-center mt-2">
-      <a href="<?= site_url('pedidos/recuperar') ?>" class="link-red">¿Olvidaste tu contraseña?</a>
+      <a href="<?= site_url('recuperar') ?>" class="link-red">¿Olvidaste tu contraseña?</a>
     </div>
     <hr>
-    <a href="<?= site_url('pedidos/registro') ?>" class="btn-crear">
+    <a href="<?= site_url('registro') ?>" class="btn-crear">
       ¿No tienes cuenta? Crear cuenta nueva →
     </a>
   </div>
@@ -71,3 +71,4 @@ hr{border-color:var(--border);margin:1rem 0}
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+
