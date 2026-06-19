@@ -25,7 +25,7 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 
 <div class="top-bar">
   <a href="javascript:history.back()" class="btn-back">← Volver</a>
-  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
+  <img src="/vendors/core/img/logo.png" alt="" onerror="this.style.display='none'">
   <span class="top-title">Términos y Privacidad — Pedidos en línea</span>
 </div>
 

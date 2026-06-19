@@ -44,7 +44,7 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 </head>
 <body>
 <div class="top-bar">
-  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
+  <img src="/vendors/core/img/logo.png" alt="" onerror="this.style.display='none'">
   <span class="top-title">Firehouse Burger</span>
 </div>
 
@@ -137,7 +137,7 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 <input type="hidden" id="idPedidoPOS" value="<?= $pedido['idPedido'] ?>">
 
 <!-- jQuery desde la ruta correcta del POS -->
-<script src="<?= '/' ?>"></script>
+<script src="/vendors/plugins/jquery/jquery.min.js"></script>
 <script>
 // Verificar que jQuery cargó correctamente
 if (typeof $ === 'undefined') {

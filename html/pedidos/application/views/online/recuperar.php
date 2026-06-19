@@ -30,7 +30,7 @@
 <body>
 <div class="card-login">
   <div class="logo-wrap">
-    <img src="<?= '/' ?>" alt="Firehouse Burger">
+    <img src="/vendors/core/img/logo.png" alt="Firehouse Burger">
     <div class="brand">FIREHOUSE BURGER</div>
   </div>
 

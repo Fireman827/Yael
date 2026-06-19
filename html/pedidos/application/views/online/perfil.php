@@ -35,7 +35,7 @@ hr{border-color:var(--border)}
 
 <div class="top-bar">
   <a href="<?= site_url('menu') ?>" class="btn-back">← Menú</a>
-  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
+  <img src="/vendors/core/img/logo.png" alt="" onerror="this.style.display='none'">
   <span class="top-title">Mi Perfil</span>
 </div>
 
@@ -130,7 +130,7 @@ hr{border-color:var(--border)}
 
 <input type="hidden" id="csrf_token_id" value="<?= $this->security->get_csrf_hash() ?>">
 
-<script src="<?= '/' ?>"></script>
+<script src="/vendors/plugins/jquery/jquery.min.js"></script>
 <script>
 var siteUrl = '<?= site_url() ?>';
 

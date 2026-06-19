@@ -31,7 +31,7 @@ hr{border-color:var(--border);margin:1rem 0}
 <body>
 <div class="card-login">
   <div class="logo-wrap">
-    <img src="<?= '/' ?>" alt="FHB" onerror="this.style.display='none'">
+    <img src="/vendors/core/img/logo.png" alt="FHB" onerror="this.style.display='none'">
     <div class="brand">Firehouse Burger</div>
   </div>
   <div class="card-body-pad">

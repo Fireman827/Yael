@@ -37,7 +37,7 @@
 <body>
 <div class="card-login">
   <div class="logo-wrap">
-    <img src="<?= '/' ?>" alt="Firehouse Burger"
+    <img src="/vendors/core/img/logo.png" alt="Firehouse Burger"
          onerror="this.style.display='none'">
     <div class="brand">Verificación</div>
   </div>

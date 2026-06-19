@@ -42,7 +42,7 @@
 <body>
 <div class="top-bar">
   <div class="brand-wrap">
-    <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
+    <img src="/vendors/core/img/logo.png" alt="" onerror="this.style.display='none'">
     <span class="brand-name">Firehouse Burger</span>
   </div>
   <div class="user-info">

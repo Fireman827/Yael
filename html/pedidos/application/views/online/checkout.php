@@ -71,7 +71,7 @@ textarea.form-control{resize:none}
 
 <div class="top-bar">
   <a href="<?= site_url('menu') ?>" class="btn-back">← Menú</a>
-  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
+  <img src="/vendors/core/img/logo.png" alt="" onerror="this.style.display='none'">
   <span class="top-title">Confirmar pedido</span>
 </div>
 
@@ -255,7 +255,7 @@ $chivoQR      = _cfgPago('PAGO_CHIVO_QR');
 <input type="hidden" id="csrf_token_id" value="<?= $this->security->get_csrf_hash() ?>">
 <input type="hidden" id="carritoBackup" value="<?= htmlspecialchars(json_encode(array_values($carrito))) ?>">
 
-<script src="<?= '/' ?>"></script>
+<script src="/vendors/plugins/jquery/jquery.min.js"></script>
 <script>
 var siteUrl = '<?= site_url() ?>';
 var zonaCubierta = null; // null = aún no se valida, true/false = resultado de /pedidos/validarZona

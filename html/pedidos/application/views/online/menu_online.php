@@ -90,7 +90,7 @@ body{background:var(--black);color:var(--text);font-family:'Segoe UI',sans-serif
 
 <div class="top-bar">
   <div class="brand-wrap">
-    <img src="<?= '/' ?>" class="brand-logo" alt="FHB" onerror="this.style.display='none'">
+    <img src="/vendors/core/img/logo.png" class="brand-logo" alt="FHB" onerror="this.style.display='none'">
     <span class="brand-name">Firehouse Burger</span>
   </div>
   <div class="user-chip">
@@ -203,7 +203,7 @@ body{background:var(--black);color:var(--text);font-family:'Segoe UI',sans-serif
 
 <input type="hidden" id="csrf_token_id" value="<?= $this->security->get_csrf_hash() ?>">
 
-<script src="<?= '/' ?>"></script>
+<script src="/vendors/plugins/jquery/jquery.min.js"></script>
 <script>
 var siteUrl    = '<?= site_url() ?>';
 var carrito    = <?= json_encode(array_values($carrito)) ?>;

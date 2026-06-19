@@ -657,4 +657,6 @@ $route['AdminOnline/zonas']                    = 'AdminOnline/zonas';
 $route['AdminOnline/listarZonas']              = 'AdminOnline/listarZonas';
 $route['AdminOnline/guardarZona']              = 'AdminOnline/guardarZona';
 $route['AdminOnline/eliminarZona']             = 'AdminOnline/eliminarZona';
+$route['AdminOnline/productosMenu']            = 'AdminOnline/productosMenu';
+$route['AdminOnline/toggleProductoOnline']     = 'AdminOnline/toggleProductoOnline';
 
