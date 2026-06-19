@@ -40,7 +40,7 @@ define('SELF',        pathinfo(__FILE__, PATHINFO_BASENAME));
 define('BASEPATH',    $system_path);
 define('FCPATH',      dirname(__FILE__) . DIRECTORY_SEPARATOR);
 define('SYSPATH',     $system_path);
-define('APPPATH',     $application_folder . DIRECTORY_SEPARATOR);
+define('APPPATH',     FCPATH . $application_folder . DIRECTORY_SEPARATOR);
 define('VIEWPATH',    APPPATH . 'views' . DIRECTORY_SEPARATOR);
 
 require_once BASEPATH . 'core/CodeIgniter.php';
