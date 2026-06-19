@@ -203,11 +203,10 @@ class AdminOnline extends CI_Controller {
     public function toggleProductoOnline(){
         if(!$this->_checkPermiso('productosMenu')) return;
         $idProducto=(int)$this->input->post('idProducto');
-        $visibleRaw=$this->input->post('visible');
-        $visible=$visibleRaw==='1' ? 'Si' : 'No';
+        $visible=$this->input->post('visible')==='1' ? 'Si' : 'No';
         if($idProducto<=0){$this->_json(500,array(),'Producto no válido.');return;}
-        $result = EditarDatos('producto',array('visibleOnlineProducto'=>$visible),array('idProducto'=>$idProducto));
-        $this->_json(200,array('debug'=>array('id'=>$idProducto,'visibleRaw'=>$visibleRaw,'valorDB'=>$visible,'affected'=>$result)),'Actualizado.');
+        EditarDatos('producto',array('visibleOnlineProducto'=>$visible),array('idProducto'=>$idProducto));
+        $this->_json(200,array(),'Actualizado.');
     }
     public function subirQR(){
         if(!$this->_checkPermiso('subirQR')) return;
