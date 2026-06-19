@@ -248,6 +248,7 @@ class Productos extends CI_Controller
 						"impresoraProducto" => (null !== ($impresora)) ? $impresora : 0,
 						"insumoProducto" => 0,
 						"estadoProducto" => "Activo",
+						"visibleOnlineProducto" => "No",
 					);
 					if($_FILES['imagenProducto']['name'] != ""){
 						$nombreImagen = "_".uniqid();

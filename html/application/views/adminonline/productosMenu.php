@@ -76,22 +76,33 @@
 <script>
 $(document).on('change', '.chkVisibleOnline', function(){
   var $chk = $(this);
+  var $label = $chk.closest('.custom-switch').find('label');
   var idProducto = $chk.data('id');
   var visible = $chk.is(':checked') ? '1' : '0';
+  var textoOriginal = $label.text();
+  $label.text('Guardando...').css('color','#888');
+  $chk.prop('disabled', true);
   $.post(window.location.origin + '/AdminOnline/toggleProductoOnline', {
     csrf_token_id: $('#csrf_token_id').val(),
     idProducto: idProducto,
     visible: visible
   }, function(r){
     if(r.codigo === 200){
-      if(typeof toastr !== 'undefined') toastr.success(r.mensaje);
+      $label.text('✔ Guardado').css('color','#28a745');
+      setTimeout(function(){
+        $label.text($chk.is(':checked') ? 'Mostrar en web' : 'Ocultar en web').css('color','');
+      }, 1500);
     } else {
       $chk.prop('checked', !$chk.is(':checked'));
-      alert('Error: '+r.mensaje);
+      $label.text(textoOriginal).css('color','red');
+      setTimeout(function(){ $label.css('color',''); }, 2000);
     }
   }, 'json').fail(function(){
     $chk.prop('checked', !$chk.is(':checked'));
-    alert('Error de conexión, intenta de nuevo.');
+    $label.text('Error').css('color','red');
+    setTimeout(function(){ $label.text(textoOriginal).css('color',''); }, 2000);
+  }).always(function(){
+    $chk.prop('disabled', false);
   });
 });
 </script>
