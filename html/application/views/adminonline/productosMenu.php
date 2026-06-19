@@ -85,13 +85,13 @@
                       </button>
                       <div class="dropdown-menu dropdown-menu-right">
                         <?php if($prod->visibleOnlineProducto === 'Si'): ?>
-                          <a class="dropdown-item accion-visibilidad" href="#"
-                             data-id="<?= $prod->idProducto ?>" data-visible="0">
+                          <a class="dropdown-item" href="#"
+                             onclick="toggleVisibilidad(this,<?= (int)$prod->idProducto ?>,0);return false;">
                             <i class="fas fa-eye-slash text-secondary"></i> Ocultar en web
                           </a>
                         <?php else: ?>
-                          <a class="dropdown-item accion-visibilidad" href="#"
-                             data-id="<?= $prod->idProducto ?>" data-visible="1">
+                          <a class="dropdown-item" href="#"
+                             onclick="toggleVisibilidad(this,<?= (int)$prod->idProducto ?>,1);return false;">
                             <i class="fas fa-globe text-success"></i> Mostrar en web
                           </a>
                         <?php endif; ?>
@@ -113,44 +113,40 @@
 <input type="hidden" id="csrf_token_id" value="<?=$this->security->get_csrf_hash()?>">
 
 <script>
-// Buscador en tiempo real
-$('#buscadorProducto').on('keyup', function(){
-  var val = $(this).val().toLowerCase();
-  $('#tablaProductosMenu tbody tr').each(function(){
-    $(this).toggle($(this).text().toLowerCase().indexOf(val) > -1);
-  });
+// Buscador — usa vanilla JS porque se ejecuta antes de que pie.php cargue jQuery
+document.getElementById('buscadorProducto').addEventListener('keyup', function(){
+  var val = this.value.toLowerCase();
+  var rows = document.querySelectorAll('#tablaProductosMenu tbody tr');
+  rows.forEach(function(tr){ tr.style.display = tr.textContent.toLowerCase().indexOf(val) > -1 ? '' : 'none'; });
 });
 
-// Acción de visibilidad
-$(document).on('click', '.accion-visibilidad', function(e){
-  e.preventDefault();
-  var $a    = $(this);
-  var id    = $a.data('id');
-  var vis   = $a.data('visible');
+// Llamada desde onclick inline — jQuery ya está disponible cuando el usuario hace click
+function toggleVisibilidad(el, id, vis) {
+  var $a    = $(el);
   var $badge = $('#badge-' + id);
-
   $a.html('<i class="fas fa-spinner fa-spin"></i> Guardando...');
-
   $.post(window.location.origin + '/AdminOnline/toggleProductoOnline', {
     csrf_token_id : $('#csrf_token_id').val(),
     idProducto    : id,
     visible       : vis
   }, function(r){
     if(r.codigo === 200){
-      if(vis == 1){
+      if(vis === 1){
         $badge.removeClass('badge-secondary').addClass('badge-success').html('<i class="fas fa-globe"></i> Visible');
-        $a.attr('data-visible','0').html('<i class="fas fa-eye-slash text-secondary"></i> Ocultar en web');
+        $a.attr('onclick','toggleVisibilidad(this,'+id+',0);return false;')
+          .html('<i class="fas fa-eye-slash text-secondary"></i> Ocultar en web');
       } else {
         $badge.removeClass('badge-success').addClass('badge-secondary').html('<i class="fas fa-eye-slash"></i> Oculto');
-        $a.attr('data-visible','1').html('<i class="fas fa-globe text-success"></i> Mostrar en web');
+        $a.attr('onclick','toggleVisibilidad(this,'+id+',1);return false;')
+          .html('<i class="fas fa-globe text-success"></i> Mostrar en web');
       }
     } else {
       alert('Error al guardar: ' + (r.mensaje || 'intente de nuevo'));
-      $a.html(vis == 1 ? '<i class="fas fa-globe text-success"></i> Mostrar en web' : '<i class="fas fa-eye-slash text-secondary"></i> Ocultar en web');
+      $a.html(vis === 1 ? '<i class="fas fa-globe text-success"></i> Mostrar en web' : '<i class="fas fa-eye-slash text-secondary"></i> Ocultar en web');
     }
   }, 'json').fail(function(){
     alert('Error de conexión.');
-    $a.html(vis == 1 ? '<i class="fas fa-globe text-success"></i> Mostrar en web' : '<i class="fas fa-eye-slash text-secondary"></i> Ocultar en web');
+    $a.html(vis === 1 ? '<i class="fas fa-globe text-success"></i> Mostrar en web' : '<i class="fas fa-eye-slash text-secondary"></i> Ocultar en web');
   });
-});
+}
 </script>
