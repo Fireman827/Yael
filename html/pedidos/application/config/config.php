@@ -2,8 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $config['base_url'] = isset($_SERVER['HTTP_HOST'])
-    ? 'http://' . $_SERVER['HTTP_HOST'] . '/'
-    : 'http://localhost/';
+    ? 'http://' . $_SERVER['HTTP_HOST'] . '/pedidos/'
+    : 'http://localhost/pedidos/';
 $config['index_page'] = '';
 $config['uri_protocol'] = 'REQUEST_URI';
 $config['url_suffix'] = '';
