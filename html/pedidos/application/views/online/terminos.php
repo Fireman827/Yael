@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Términos y Privacidad - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
 :root{--red:#C0392B;--red-d:#922B21;--black:#111;--card:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888}
 body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text);padding-bottom:2rem}
@@ -25,7 +25,7 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 
 <div class="top-bar">
   <a href="javascript:history.back()" class="btn-back">← Volver</a>
-  <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="" onerror="this.style.display='none'">
+  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
   <span class="top-title">Términos y Privacidad — Pedidos en línea</span>
 </div>
 
@@ -100,4 +100,5 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+
 

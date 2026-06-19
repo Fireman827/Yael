@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>¡Pedido confirmado! - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
 :root{--red:#C0392B;--red-d:#922B21;--black:#111;--card:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888;--green:#27ae60}
 body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text);padding-bottom:2rem}
@@ -44,7 +44,7 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 </head>
 <body>
 <div class="top-bar">
-  <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="" onerror="this.style.display='none'">
+  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
   <span class="top-title">Firehouse Burger</span>
 </div>
 
@@ -137,12 +137,12 @@ body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text)
 <input type="hidden" id="idPedidoPOS" value="<?= $pedido['idPedido'] ?>">
 
 <!-- jQuery desde la ruta correcta del POS -->
-<script src="<?= base_url('vendors/plugins/jquery/jquery.min.js') ?>"></script>
+<script src="<?= '/' ?>"></script>
 <script>
 // Verificar que jQuery cargó correctamente
 if (typeof $ === 'undefined') {
   // Intentar ruta alternativa
-  document.write('<script src="<?= base_url('vendors/jquery/jquery.min.js') ?>"><\/script>');
+  document.write('<script src="<?= '/' ?>"><\/script>');
 }
 </script>
 <script>
@@ -227,3 +227,4 @@ if (FINALES.indexOf(estadoActual) === -1) {
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+

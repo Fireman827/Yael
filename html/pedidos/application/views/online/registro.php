@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crear cuenta - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
 :root{--red:#C0392B;--red-d:#922B21;--black:#111;--card:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888}
 body{background:var(--black);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',sans-serif;padding:1rem}
@@ -31,7 +31,7 @@ hr{border-color:var(--border);margin:.75rem 0}
 <body>
 <div class="card-reg">
   <div class="logo-wrap">
-    <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="FHB" onerror="this.style.display='none'">
+    <img src="<?= '/' ?>" alt="FHB" onerror="this.style.display='none'">
     <span class="brand">Firehouse Burger — Crear cuenta</span>
   </div>
   <div class="card-body-pad">
@@ -182,4 +182,5 @@ document.querySelector('[name=departamentoCliente]').addEventListener('change', 
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+
 

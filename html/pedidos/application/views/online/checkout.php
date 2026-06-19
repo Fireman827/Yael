@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Confirmar pedido - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
 :root{--red:#C0392B;--red-d:#922B21;--black:#111;--card:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888}
 body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text);padding-bottom:2rem}
@@ -71,7 +71,7 @@ textarea.form-control{resize:none}
 
 <div class="top-bar">
   <a href="<?= site_url('menu') ?>" class="btn-back">← Menú</a>
-  <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="" onerror="this.style.display='none'">
+  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
   <span class="top-title">Confirmar pedido</span>
 </div>
 
@@ -255,7 +255,7 @@ $chivoQR      = _cfgPago('PAGO_CHIVO_QR');
 <input type="hidden" id="csrf_token_id" value="<?= $this->security->get_csrf_hash() ?>">
 <input type="hidden" id="carritoBackup" value="<?= htmlspecialchars(json_encode(array_values($carrito))) ?>">
 
-<script src="<?= base_url('vendors/plugins/jquery/jquery.min.js') ?>"></script>
+<script src="<?= '/' ?>"></script>
 <script>
 var siteUrl = '<?= site_url() ?>';
 var zonaCubierta = null; // null = aún no se valida, true/false = resultado de /pedidos/validarZona
@@ -491,3 +491,4 @@ function validarZonaCobertura(lat, lng) {
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+

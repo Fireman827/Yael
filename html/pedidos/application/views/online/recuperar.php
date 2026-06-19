@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Recuperar contraseña - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/plugins/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
   body { background:#111; min-height:100vh; display:flex; align-items:center; justify-content:center; font-family:'Segoe UI',sans-serif; padding:1rem; }
   .card-login { max-width:400px; width:100%; background:#1a1a1a; border:1px solid #333; border-radius:16px; padding:2rem; }
@@ -30,7 +30,7 @@
 <body>
 <div class="card-login">
   <div class="logo-wrap">
-    <img src="<?= base_url('vendors/core/img/logo2.png') ?>" alt="Firehouse Burger">
+    <img src="<?= '/' ?>" alt="Firehouse Burger">
     <div class="brand">FIREHOUSE BURGER</div>
   </div>
 
@@ -97,3 +97,4 @@ document.querySelectorAll('.otp-digit').forEach(function(inp, idx, arr){
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+

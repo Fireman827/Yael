@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi perfil - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
 :root{--red:#C0392B;--red-d:#922B21;--black:#111;--dark:#1a1a1a;--card:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888;--green:#27ae60}
 body{background:var(--black);font-family:'Segoe UI',sans-serif;color:var(--text);padding-bottom:2rem}
@@ -35,7 +35,7 @@ hr{border-color:var(--border)}
 
 <div class="top-bar">
   <a href="<?= site_url('menu') ?>" class="btn-back">← Menú</a>
-  <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="" onerror="this.style.display='none'">
+  <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
   <span class="top-title">Mi Perfil</span>
 </div>
 
@@ -130,7 +130,7 @@ hr{border-color:var(--border)}
 
 <input type="hidden" id="csrf_token_id" value="<?= $this->security->get_csrf_hash() ?>">
 
-<script src="<?= base_url('vendors/plugins/jquery/jquery.min.js') ?>"></script>
+<script src="<?= '/' ?>"></script>
 <script>
 var siteUrl = '<?= site_url() ?>';
 
@@ -201,4 +201,5 @@ function cambiarPassword() {
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+
 

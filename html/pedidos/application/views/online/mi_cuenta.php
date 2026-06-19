@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mis pedidos - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
   :root{--fhb-red:#C0392B;--fhb-red-dark:#922B21;--fhb-black:#111;--fhb-card:#1e1e1e;--fhb-border:#2a2a2a;--fhb-text:#e8e8e8;--fhb-muted:#888}
   body{background:var(--fhb-black);font-family:'Segoe UI',sans-serif;color:var(--fhb-text);padding-bottom:2rem}
@@ -42,7 +42,7 @@
 <body>
 <div class="top-bar">
   <div class="brand-wrap">
-    <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="" onerror="this.style.display='none'">
+    <img src="<?= '/' ?>" alt="" onerror="this.style.display='none'">
     <span class="brand-name">Firehouse Burger</span>
   </div>
   <div class="user-info">
@@ -91,4 +91,5 @@
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+
 

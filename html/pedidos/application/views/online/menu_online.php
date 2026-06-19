@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Menú - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
 :root{--red:#C0392B;--red-d:#922B21;--black:#111;--dark:#1a1a1a;--card:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888}
 *{box-sizing:border-box}
@@ -90,7 +90,7 @@ body{background:var(--black);color:var(--text);font-family:'Segoe UI',sans-serif
 
 <div class="top-bar">
   <div class="brand-wrap">
-    <img src="<?= base_url('vendors/core/img/logo.png') ?>" class="brand-logo" alt="FHB" onerror="this.style.display='none'">
+    <img src="<?= '/' ?>" class="brand-logo" alt="FHB" onerror="this.style.display='none'">
     <span class="brand-name">Firehouse Burger</span>
   </div>
   <div class="user-chip">
@@ -121,7 +121,7 @@ body{background:var(--black);color:var(--text);font-family:'Segoe UI',sans-serif
 <?php if ($productos): foreach ($productos as $p):
   $key       = 'p_' . $p->idProducto;
   $enCarrito = isset($carrito[$key]) ? $carrito[$key]['cantidad'] : 0;
-  $imgUrl    = !empty($p->imagenProducto) ? base_url($p->imagenProducto) : '';
+  $imgUrl    = !empty($p->imagenProducto) ? '/' . ltrim($p->imagenProducto, '/') : '';
   $desc      = $p->descripcionProducto ?? '';
   $descShort = $desc ? mb_substr($desc, 0, 60) . (mb_strlen($desc) > 60 ? '...' : '') : '';
 ?>
@@ -203,7 +203,7 @@ body{background:var(--black);color:var(--text);font-family:'Segoe UI',sans-serif
 
 <input type="hidden" id="csrf_token_id" value="<?= $this->security->get_csrf_hash() ?>">
 
-<script src="<?= base_url('vendors/plugins/jquery/jquery.min.js') ?>"></script>
+<script src="<?= '/' ?>"></script>
 <script>
 var siteUrl    = '<?= site_url() ?>';
 var carrito    = <?= json_encode(array_values($carrito)) ?>;
@@ -328,3 +328,4 @@ function agregarDesdeModal() {
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+

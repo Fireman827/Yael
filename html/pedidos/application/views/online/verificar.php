@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Verificar teléfono - Firehouse Burger</title>
-<link rel="stylesheet" href="<?= base_url('vendors/bootstrap/css/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= '/' ?>">
 <style>
   :root { --fhb-red:#C0392B; --fhb-red-dark:#922B21; --fhb-black:#111; --fhb-card:#1e1e1e; --fhb-border:#2a2a2a; --fhb-text:#e8e8e8; --fhb-muted:#888; --fhb-gold:#f39c12; }
   body { background:var(--fhb-black); min-height:100vh; display:flex; align-items:center; justify-content:center; font-family:'Segoe UI',sans-serif; padding:1rem; }
@@ -37,7 +37,7 @@
 <body>
 <div class="card-login">
   <div class="logo-wrap">
-    <img src="<?= base_url('vendors/core/img/logo.png') ?>" alt="Firehouse Burger"
+    <img src="<?= '/' ?>" alt="Firehouse Burger"
          onerror="this.style.display='none'">
     <div class="brand">Verificación</div>
   </div>
@@ -126,4 +126,5 @@ digits[0].focus();
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
 </html>
+
 
