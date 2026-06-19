@@ -54,7 +54,7 @@ class AdminOnline_model extends CI_Model {
         $resultado = array();
         if($categorias){
             foreach($categorias as $cat){
-                $this->db->select('idProducto,nombreProducto,imagenProducto,precioVentaProducto,visibleOnlineProducto');
+                $this->db->select('idProducto,nombreProducto,imagenProducto,precioVentaProducto,visibleOnlineProducto,estadoProducto');
                 $this->db->from('producto');
                 $this->db->where('idSucursalProducto',(int)$idSucursal);
                 $this->db->where('estadoProducto','Activo');
