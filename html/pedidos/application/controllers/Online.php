@@ -452,6 +452,8 @@ class Online extends CI_Controller {
     // Si no viene ?cat= toma la primera categoría activa
     // ===========================================================
     public function menu() {
+        $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        $this->output->set_header('Pragma: no-cache');
         $sesion     = $this->_verificarSesion();
         $suc = $this->db->select('idSucursal')->order_by('idSucursal','ASC')->limit(1)->get('sucursal')->row();
         $idSucursal = $suc ? (int)$suc->idSucursal : 1;
