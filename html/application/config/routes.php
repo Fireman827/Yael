@@ -640,36 +640,8 @@ $route['Notificaciones/marcarTodasAjax'] = 'Notificaciones/marcarTodasAjax';
 $route['Notificaciones/ajaxContador']    = 'Notificaciones/ajaxContador';
 
 // ------------- Pedidos Online --------
-$route['pedidos']                     = 'Online/login';
-$route['pedidos/login']               = 'Online/login';
-$route['pedidos/registro']            = 'Online/registro';
-$route['pedidos/verificar']           = 'Online/verificar';
-$route['pedidos/reenviar_otp']        = 'Online/reenviar_otp';
-$route['pedidos/recuperar']           = 'Online/recuperar';
-$route['pedidos/nueva_password']      = 'Online/nueva_password';
-$route['pedidos/logout']              = 'Online/logout';
-$route['pedidos/terminos']            = 'Online/terminos';
-
-// Páginas autenticadas
-$route['pedidos/menu']                = 'Online/menu';
-$route['pedidos/menu/(:any)']         = 'Online/menu/$1';
-$route['pedidos/checkout']            = 'Online/checkout';
-$route['pedidos/confirmar']           = 'Online/confirmar';
-$route['pedidos/confirmacion']        = 'Online/confirmacion';
-$route['pedidos/confirmacion/(:any)'] = 'Online/confirmacion/$1';
-$route['pedidos/cuenta']              = 'Online/mi_cuenta';
-$route['pedidos/validarZona']         = 'Online/validarZona';
-
-// Perfil del cliente
-$route['pedidos/perfil']              = 'Online/perfil';
-$route['pedidos/guardarPerfil']       = 'Online/guardarPerfil';
-$route['pedidos/guardarFacturacion']  = 'Online/guardarFacturacion';
-$route['pedidos/cambiarPassword']     = 'Online/cambiarPassword';
-
-// AJAX — carrito y estado (usan prefijo Online/ para no pasar por guard)
-$route['Online/agregar_carrito']               = 'Online/agregar_carrito';
-$route['Online/carrito']                       = 'Online/carrito';
-$route['Online/estado_pedido']                 = 'Online/estado_pedido';
+// Storefront movido a html/pedidos/ (app CI3 separada)
+// Solo se mantiene el endpoint de polling para cocina
 $route['Online/VerificarOnlinePendientes']     = 'Online/VerificarOnlinePendientes';
 
 // Panel Admin dentro del POS
