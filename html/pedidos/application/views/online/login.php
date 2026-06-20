@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pedidos en línea - Firehouse Burger</title>
+<link rel="icon" type="image/png" href="/vendors/core/img/logo.png">
 <link rel="stylesheet" href="<?= '/' ?>">
 <style>
 :root{--red:#C0392B;--red-d:#922B21;--black:#111;--card:#1e1e1e;--border:#2a2a2a;--text:#e8e8e8;--muted:#888}
