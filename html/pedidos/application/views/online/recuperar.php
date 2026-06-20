@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Recuperar contraseña - Firehouse Burger</title>
-<link rel="icon" type="image/png" href="/vendors/core/img/logo.png">
+<link rel="icon" type="image/png" href="<?= base_url('vendors/core/img/logo.png') ?>">
 <link rel="stylesheet" href="<?= '/' ?>">
 <style>
   body { background:#111; min-height:100vh; display:flex; align-items:center; justify-content:center; font-family:'Segoe UI',sans-serif; padding:1rem; }
