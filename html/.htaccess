@@ -7,5 +7,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 RewriteCond %{HTTP_HOST} !^fhbrestaurant\.local$ [NC]
+RewriteCond %{REQUEST_URI} !^/imprimir/ [NC]
 RewriteRule ^(.*)$ http://fhbrestaurant.local/$1 [L,R=301]
 
