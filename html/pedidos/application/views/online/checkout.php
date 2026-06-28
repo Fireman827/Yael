@@ -195,7 +195,7 @@ $chivoQR      = _cfgPago('PAGO_CHIVO_QR');
       <?php if ($bancoTitular): ?><div class="pago-row"><span>Titular</span><span><?= htmlspecialchars($bancoTitular) ?></span></div><?php endif; ?>
       <?php if ($bancoQR): ?>
       <div class="pago-qr"><p style="font-size:12px;color:var(--muted);margin-bottom:6px">Escanea para transferir:</p>
-        <img src="<?= base_url($bancoQR) ?>" alt="QR Transferencia"></div>
+        <img src="/<?= ltrim($bancoQR, '/') ?>" alt="QR Transferencia"></div>
       <?php endif; ?>
       <p style="font-size:12px;color:var(--muted);margin-top:8px;margin-bottom:0">📸 Envía el comprobante por WhatsApp al confirmar.</p>
     </div>
@@ -203,7 +203,7 @@ $chivoQR      = _cfgPago('PAGO_CHIVO_QR');
       <?php if ($chivoNum): ?><div class="pago-row"><span>Chivo / Lightning</span><span><?= htmlspecialchars($chivoNum) ?></span></div><?php endif; ?>
       <?php if ($chivoQR): ?>
       <div class="pago-qr"><p style="font-size:12px;color:var(--muted);margin-bottom:6px">Escanea con Chivo Wallet:</p>
-        <img src="<?= base_url($chivoQR) ?>" alt="QR Chivo"></div>
+        <img src="/<?= ltrim($chivoQR, '/') ?>" alt="QR Chivo"></div>
       <?php endif; ?>
       <p style="font-size:12px;color:var(--muted);margin-top:8px;margin-bottom:0">⚡ Paga con Chivo Wallet u otra billetera Bitcoin Lightning.</p>
     </div>
