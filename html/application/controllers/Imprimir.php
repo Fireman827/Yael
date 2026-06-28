@@ -2722,12 +2722,20 @@ class Imprimir extends CI_Controller
             $cuenta .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
             if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
 
-            $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]);
-  					if($clientedata)
+            $clientedata = ((int)$pedido->idCliente > 0) ? $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]) : false;
+            if(!$clientedata){
+              $online = $this->core->TraerUnDato('pedidoonline',['idPedidoRef' => $pedido->idPedido]);
+              if($online && !empty($online->idClienteAccesoRef)){
+                $acceso = $this->core->TraerUnDato('clienteacceso',['idClienteAcceso' => $online->idClienteAccesoRef]);
+                if($acceso && !empty($acceso->idClienteRef))
+                  $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $acceso->idClienteRef]);
+              }
+            }
+  					if($clientedata && !empty($clientedata->telefonoCliente))
   					{
-              $relleno = $espacios - strlen("TELFONO: ".$clientedata->telefonoCliente);
-              $cuenta .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
-              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              $relleno = $espacios - strlen("TELEFONO: ".$clientedata->telefonoCliente);
+              $cuenta .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
   					}
 
           }
@@ -2741,12 +2749,20 @@ class Imprimir extends CI_Controller
             $cuenta .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
             if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
 
-            $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]);
-            if($clientedata)
+            $clientedata = ((int)$pedido->idCliente > 0) ? $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]) : false;
+            if(!$clientedata){
+              $online = $this->core->TraerUnDato('pedidoonline',['idPedidoRef' => $pedido->idPedido]);
+              if($online && !empty($online->idClienteAccesoRef)){
+                $acceso = $this->core->TraerUnDato('clienteacceso',['idClienteAcceso' => $online->idClienteAccesoRef]);
+                if($acceso && !empty($acceso->idClienteRef))
+                  $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $acceso->idClienteRef]);
+              }
+            }
+            if($clientedata && !empty($clientedata->telefonoCliente))
   					{
-              $relleno = $espacios - strlen("TELFONO: ".$clientedata->telefonoCliente);
-              $cuenta .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
-              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              $relleno = $espacios - strlen("TELEFONO: ".$clientedata->telefonoCliente);
+              $cuenta .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
   					}
 
           }
