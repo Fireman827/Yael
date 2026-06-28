@@ -332,7 +332,7 @@ function confirmarPedido() {
 
   $.ajax({
     type: 'POST',
-    url: siteUrl + 'pedidos/confirmar',
+    url: siteUrl + 'confirmar',
     data: {
       tipoPedido:    tipo.value,
       metodoPago:    pago.value,
@@ -381,7 +381,7 @@ function mostrarExito(codigo) {
 }
 
 function irAConfirmacion() {
-  window.location.href = siteUrl + 'pedidos/confirmacion';
+  window.location.href = siteUrl + 'confirmacion';
 }
 
 <?php if (!empty($googleMapsApiKey)): ?>
@@ -452,7 +452,7 @@ function actualizarUbicacion(latLng) {
 function validarZonaCobertura(lat, lng) {
   var warn = document.getElementById('zonaWarning');
   var btn = document.getElementById('btnConfirmar');
-  $.post(siteUrl + 'pedidos/validarZona', { latitud: lat, longitud: lng, csrf_token_id: $('#csrf_token_id').val() }, function(r) {
+  $.post(siteUrl + 'validarZona', { latitud: lat, longitud: lng, csrf_token_id: $('#csrf_token_id').val() }, function(r) {
     if (r.codigo === 200 && r.cubierto === false) {
       zonaCubierta = false;
       warn.style.display = 'block';

@@ -147,7 +147,7 @@ function guardarPerfil() {
   btn.disabled = true; btn.textContent = '⏳ Guardando...';
 
   $.ajax({
-    type: 'POST', url: siteUrl + 'pedidos/guardarPerfil',
+    type: 'POST', url: siteUrl + 'guardarPerfil',
     data: {
       nombre:        $('#pNombre').val(),
       telefono:      $('#pTelefono').val(),
@@ -180,7 +180,7 @@ function cambiarPassword() {
   if (nueva !== confirmar){ mostrarMsg('err', 'Las contraseñas no coinciden.'); return; }
 
   $.ajax({
-    type: 'POST', url: siteUrl + 'pedidos/cambiarPassword',
+    type: 'POST', url: siteUrl + 'cambiarPassword',
     data: {
       password_actual:  actual,
       password_nueva:   nueva,
