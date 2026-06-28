@@ -567,14 +567,18 @@ class Online extends CI_Controller {
             return $i['precio'] * $i['cantidad'];
         }, $carrito));
 
-        $cfgMaps = TraerUnDato('configuraciones', "parametroConfiguracion='GOOGLE_MAPS_API_KEY'");
+        $cfgMaps   = TraerUnDato('configuraciones', "parametroConfiguracion='GOOGLE_MAPS_API_KEY' AND estadoConfiguracion='Activo'");
+        $cfgLat    = TraerUnDato('configuraciones', "parametroConfiguracion='RESTAURANTE_LAT' AND estadoConfiguracion='Activo'");
+        $cfgLng    = TraerUnDato('configuraciones', "parametroConfiguracion='RESTAURANTE_LNG' AND estadoConfiguracion='Activo'");
 
         $this->load->view('online/checkout', array(
-            'titulo'  => 'Confirmar pedido',
-            'sesion'  => $sesion,
-            'carrito' => array_values($carrito),
-            'total'   => number_format($total, 2),
-            'googleMapsApiKey' => $cfgMaps ? $cfgMaps->valorConfiguracion : '',
+            'titulo'           => 'Confirmar pedido',
+            'sesion'           => $sesion,
+            'carrito'          => array_values($carrito),
+            'total'            => number_format($total, 2),
+            'googleMapsApiKey' => ($cfgMaps && !empty(trim($cfgMaps->valorConfiguracion))) ? trim($cfgMaps->valorConfiguracion) : '',
+            'restLat'          => $cfgLat ? $cfgLat->valorConfiguracion : '13.6929',
+            'restLng'          => $cfgLng ? $cfgLng->valorConfiguracion : '-89.2182',
         ));
     }
 

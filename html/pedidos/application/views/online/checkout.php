@@ -140,20 +140,14 @@ $chivoQR      = _cfgPago('PAGO_CHIVO_QR');
       -->
     </div>
     <div id="geoWrap">
-      <?php if (!empty($googleMapsApiKey)): ?>
-      <input type="text" id="mapaBuscar" class="form-control mb-2" placeholder="🔍 Buscar mi dirección...">
-      <div id="mapaUbicacion" style="width:100%;height:220px;border-radius:8px;overflow:hidden;margin-bottom:8px"></div>
+      <!-- Mapa siempre visible: Leaflet (gratis) o Google Maps si hay API key -->
+      <div id="mapaUbicacion" style="width:100%;height:220px;border-radius:8px;overflow:hidden;margin-bottom:8px;margin-top:10px"></div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
-        Arrastra el pin 📍 para ajustar tu ubicación exacta de entrega.
+        Mueve el pin 📍 para ajustar tu ubicación exacta de entrega.
       </div>
       <div id="zonaWarning" style="display:none;background:rgba(231,76,60,.12);border:1px solid #e74c3c;color:#ff6b5e;border-radius:8px;padding:10px;font-size:12.5px;margin-bottom:8px;line-height:1.5">
         ⚠️ Lo sentimos, tu ubicación está fuera de nuestras zonas de cobertura de delivery. Ajusta el pin a una dirección dentro de nuestra zona, o elige "Recoger en restaurante".
       </div>
-      <?php else: ?>
-      <button type="button" class="btn-geo" id="btnGeo" onclick="compartirUbicacion()">
-        📍 Compartir mi ubicación (ayuda al repartidor a llegar más rápido)
-      </button>
-      <?php endif; ?>
       <input type="hidden" id="geoLat" value="">
       <input type="hidden" id="geoLng" value="">
     </div>
@@ -389,61 +383,12 @@ function irAConfirmacion() {
 // Mapa interactivo de ubicación (Google Maps)
 // ===========================================================
 var mapaUbicacion, marcadorUbicacion;
+var usandoGoogleMaps = <?= !empty($googleMapsApiKey) ? 'true' : 'false' ?>;
 
-function initMapaUbicacion() {
-  var centroDefault = { lat: 13.6929, lng: -89.2182 }; // San Salvador
-
-  mapaUbicacion = new google.maps.Map(document.getElementById('mapaUbicacion'), {
-    center: centroDefault,
-    zoom: 13,
-    streetViewControl: false,
-    mapTypeControl: false,
-    fullscreenControl: false
-  });
-
-  marcadorUbicacion = new google.maps.Marker({
-    position: centroDefault,
-    map: mapaUbicacion,
-    draggable: true
-  });
-
-  google.maps.event.addListener(marcadorUbicacion, 'dragend', function() {
-    actualizarUbicacion(marcadorUbicacion.getPosition());
-  });
-
-  mapaUbicacion.addListener('click', function(e) {
-    marcadorUbicacion.setPosition(e.latLng);
-    actualizarUbicacion(e.latLng);
-  });
-
-  var autocomplete = new google.maps.places.Autocomplete(document.getElementById('mapaBuscar'), {
-    componentRestrictions: { country: 'sv' }
-  });
-  autocomplete.bindTo('bounds', mapaUbicacion);
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-    if (!place.geometry || !place.geometry.location) return;
-    mapaUbicacion.setCenter(place.geometry.location);
-    mapaUbicacion.setZoom(16);
-    marcadorUbicacion.setPosition(place.geometry.location);
-    actualizarUbicacion(place.geometry.location);
-  });
-
-  // Intentar geolocalizar al usuario al cargar
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      var ubicacion = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      mapaUbicacion.setCenter(ubicacion);
-      mapaUbicacion.setZoom(16);
-      marcadorUbicacion.setPosition(ubicacion);
-      actualizarUbicacion(ubicacion);
-    }, function() { /* sin permiso, se queda en el centro por defecto */ }, { enableHighAccuracy: true, timeout: 8000 });
-  }
-}
-
-function actualizarUbicacion(latLng) {
-  var lat = typeof latLng.lat === 'function' ? latLng.lat() : latLng.lat;
-  var lng = typeof latLng.lng === 'function' ? latLng.lng() : latLng.lng;
+// -------------------------------------------------------
+// Función compartida: actualiza campos ocultos y valida zona
+// -------------------------------------------------------
+function actualizarUbicacion(lat, lng) {
   document.getElementById('geoLat').value = lat;
   document.getElementById('geoLng').value = lng;
   validarZonaCobertura(lat, lng);
@@ -451,7 +396,7 @@ function actualizarUbicacion(latLng) {
 
 function validarZonaCobertura(lat, lng) {
   var warn = document.getElementById('zonaWarning');
-  var btn = document.getElementById('btnConfirmar');
+  var btn  = document.getElementById('btnConfirmar');
   $.post(siteUrl + 'validarZona', { latitud: lat, longitud: lng, csrf_token_id: $('#csrf_token_id').val() }, function(r) {
     if (r.codigo === 200 && r.cubierto === false) {
       zonaCubierta = false;
@@ -467,13 +412,85 @@ function validarZonaCobertura(lat, lng) {
     }
   }, 'json');
 }
-<?php endif; ?>
 
-// Aviso informativo (no bloqueante) si la IP parece estar fuera de El Salvador
+// -------------------------------------------------------
+// LEAFLET (OpenStreetMap) — sin API key
+// -------------------------------------------------------
+function initMapaLeaflet() {
+  var latDefault = <?= !empty($restLat) ? (float)$restLat : 13.6929 ?>;
+  var lngDefault = <?= !empty($restLng) ? (float)$restLng : -89.2182 ?>;
+
+  mapaUbicacion = L.map('mapaUbicacion').setView([latDefault, lngDefault], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+    maxZoom: 19
+  }).addTo(mapaUbicacion);
+
+  marcadorUbicacion = L.marker([latDefault, lngDefault], { draggable: true }).addTo(mapaUbicacion);
+
+  marcadorUbicacion.on('dragend', function(e) {
+    var pos = e.target.getLatLng();
+    actualizarUbicacion(pos.lat, pos.lng);
+  });
+
+  mapaUbicacion.on('click', function(e) {
+    marcadorUbicacion.setLatLng(e.latlng);
+    actualizarUbicacion(e.latlng.lat, e.latlng.lng);
+  });
+
+  // Intentar geolocalizar al cargar
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      var lat = pos.coords.latitude, lng = pos.coords.longitude;
+      mapaUbicacion.setView([lat, lng], 16);
+      marcadorUbicacion.setLatLng([lat, lng]);
+      actualizarUbicacion(lat, lng);
+    }, function() {}, { enableHighAccuracy: true, timeout: 8000 });
+  }
+}
+
+// -------------------------------------------------------
+// GOOGLE MAPS — solo si hay API key configurada
+// -------------------------------------------------------
+function initMapaUbicacion() {
+  var latDefault = <?= !empty($restLat) ? (float)$restLat : 13.6929 ?>;
+  var lngDefault = <?= !empty($restLng) ? (float)$restLng : -89.2182 ?>;
+  var centroDefault = { lat: latDefault, lng: lngDefault };
+
+  mapaUbicacion = new google.maps.Map(document.getElementById('mapaUbicacion'), {
+    center: centroDefault, zoom: 14,
+    streetViewControl: false, mapTypeControl: false, fullscreenControl: false
+  });
+  marcadorUbicacion = new google.maps.Marker({ position: centroDefault, map: mapaUbicacion, draggable: true });
+
+  google.maps.event.addListener(marcadorUbicacion, 'dragend', function() {
+    var pos = marcadorUbicacion.getPosition();
+    actualizarUbicacion(pos.lat(), pos.lng());
+  });
+  mapaUbicacion.addListener('click', function(e) {
+    marcadorUbicacion.setPosition(e.latLng);
+    actualizarUbicacion(e.latLng.lat(), e.latLng.lng());
+  });
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      var ubicacion = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      mapaUbicacion.setCenter(ubicacion); mapaUbicacion.setZoom(16);
+      marcadorUbicacion.setPosition(ubicacion);
+      actualizarUbicacion(ubicacion.lat, ubicacion.lng);
+    }, function() {}, { enableHighAccuracy: true, timeout: 8000 });
+  }
+}
+
+// Iniciar mapa correcto al cargar la página
+window.addEventListener('load', function() {
+  if (!usandoGoogleMaps) initMapaLeaflet();
+  // Google Maps se inicia via callback en el script tag de abajo
+});
+
+// Aviso informativo si la IP parece estar fuera de El Salvador
 (function(){
-  try {
-    if (sessionStorage.getItem('fhb_ip_check_done')) return;
-  } catch (e) {}
+  try { if (sessionStorage.getItem('fhb_ip_check_done')) return; } catch (e) {}
   fetch('https://ipapi.co/json/').then(function(r){ return r.json(); }).then(function(d){
     try { sessionStorage.setItem('fhb_ip_check_done', '1'); } catch (e) {}
     if (d && d.country_code && d.country_code !== 'SV') {
@@ -487,6 +504,9 @@ function validarZonaCobertura(lat, lng) {
 </script>
 <?php if (!empty($googleMapsApiKey)): ?>
 <script src="https://maps.googleapis.com/maps/api/js?key=<?= urlencode($googleMapsApiKey) ?>&libraries=places&callback=initMapaUbicacion" async defer></script>
+<?php else: ?>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <?php endif; ?>
 <?php $this->load->view('online/_cookie_banner'); ?>
 </body>
