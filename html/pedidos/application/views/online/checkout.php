@@ -378,9 +378,8 @@ function irAConfirmacion() {
   window.location.href = siteUrl + 'confirmacion';
 }
 
-<?php if (!empty($googleMapsApiKey)): ?>
 // ===========================================================
-// Mapa interactivo de ubicación (Google Maps)
+// Mapa interactivo de ubicación
 // ===========================================================
 var mapaUbicacion, marcadorUbicacion;
 var usandoGoogleMaps = <?= !empty($googleMapsApiKey) ? 'true' : 'false' ?>;
