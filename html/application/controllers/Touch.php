@@ -2710,28 +2710,29 @@ class Touch extends CI_Controller {
 									function ClienteAutocomplete(){
 										if($this->input->method(TRUE) == "POST"){
 											$busquedaParametro = $this->input->post("query");
-
 											$sucursal = $this->session->idSucursal;
-											$condicionWhere = array('idSucursalCliente' => $sucursal,'estadoCliente' => 'Activo');
-											$condicionLike = array('nombreCliente' => $busquedaParametro);
-											$join=array(
-												array(
-													"tabla" => "FE_CAT_012_Departamento",
-													"condicion" => "CAST(FE_CAT_012_Departamento.codigo AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)",
-													"tipo" => "left",
-													"campos" => "FE_CAT_012_Departamento.valores as departamento, md5(cliente.idCliente) as idmd"
-												),
-												array(
-													"tabla" => "FE_CAT_013_Municipio",
-													"condicion" => "CAST(FE_CAT_013_Municipio.codigo AS UNSIGNED) = CAST(cliente.municipioCliente AS UNSIGNED) AND CAST(FE_CAT_013_Municipio.departamento AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)",
-													"tipo" => "left",
-													"campos" => "FE_CAT_013_Municipio.valores as municipio"
-												),
-											);
-											$Insumos = TraerDatosComo("cliente",$condicionWhere,$condicionLike,$join);
+
+											$this->db->select('cliente.*, md5(cliente.idCliente) as idmd,
+												FE_CAT_012_Departamento.valores as departamento,
+												FE_CAT_013_Municipio.valores as municipio');
+											$this->db->from('cliente');
+											$this->db->join('FE_CAT_012_Departamento',
+												'CAST(FE_CAT_012_Departamento.codigo AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)', 'left');
+											$this->db->join('FE_CAT_013_Municipio',
+												'CAST(FE_CAT_013_Municipio.codigo AS UNSIGNED) = CAST(cliente.municipioCliente AS UNSIGNED)
+												AND CAST(FE_CAT_013_Municipio.departamento AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)', 'left');
+											$this->db->where('cliente.idSucursalCliente', (int)$sucursal);
+											$this->db->where('cliente.estadoCliente', 'Activo');
+											$this->db->group_start();
+												$this->db->like('cliente.nombreCliente', $busquedaParametro);
+												$this->db->or_like('cliente.duiCliente', $busquedaParametro);
+												$this->db->or_like('cliente.telefonoCliente', $busquedaParametro);
+											$this->db->group_end();
+											$this->db->limit(15);
+											$q = $this->db->get();
+											$Insumos = ($q->num_rows() > 0) ? $q->result() : false;
 											echo json_encode($Insumos);
 										}
-
 									}
 
 									function BuscarBarcode()
