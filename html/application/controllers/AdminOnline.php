@@ -111,7 +111,8 @@ class AdminOnline extends CI_Controller {
             'NOTIF_EMAIL_TO',
             'ORION_API_URL','ORION_API_KEY',
             'GOOGLE_MAPS_API_KEY',
-            'RESTAURANTE_LAT','RESTAURANTE_LNG');
+            'RESTAURANTE_LAT','RESTAURANTE_LNG',
+            'RESENIA_GOOGLE_URL','RESENIA_FACEBOOK_URL','RESENIA_INSTAGRAM_URL');
         $config=array();
         foreach($params as $p){ $row=TraerUnDato('configuraciones',"parametroConfiguracion='{$p}'"); $config[$p]=$row?$row->valorConfiguracion:''; }
         GblPlantilla('adminonline/configuracion',array('config'=>$config),array(),'Configuración de Pagos');
@@ -127,7 +128,8 @@ class AdminOnline extends CI_Controller {
             'NOTIF_EMAIL_TO',
             'ORION_API_URL','ORION_API_KEY',
             'GOOGLE_MAPS_API_KEY',
-            'RESTAURANTE_LAT','RESTAURANTE_LNG');
+            'RESTAURANTE_LAT','RESTAURANTE_LNG',
+            'RESENIA_GOOGLE_URL','RESENIA_FACEBOOK_URL','RESENIA_INSTAGRAM_URL');
         foreach($campos as $c){
             $v=$this->input->post($c); if($v===null) continue;
             $e=TraerUnDato('configuraciones',"parametroConfiguracion='{$c}'");

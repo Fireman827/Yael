@@ -475,6 +475,12 @@ class Imprimir extends CI_Controller
         $servidor = $impresion->servidorImpresora;
         $datos["ticket"] = urlencode($ticket);
         $datos["servidor"] = $servidor;
+        $cfgGoogle   = TraerUnDato('configuraciones',"parametroConfiguracion='RESENIA_GOOGLE_URL' AND estadoConfiguracion='Activo'");
+        $cfgFacebook = TraerUnDato('configuraciones',"parametroConfiguracion='RESENIA_FACEBOOK_URL' AND estadoConfiguracion='Activo'");
+        $cfgInsta    = TraerUnDato('configuraciones',"parametroConfiguracion='RESENIA_INSTAGRAM_URL' AND estadoConfiguracion='Activo'");
+        if($cfgGoogle   && !empty(trim($cfgGoogle->valorConfiguracion)))   $datos["reseniaGoogle"]    = trim($cfgGoogle->valorConfiguracion);
+        if($cfgFacebook && !empty(trim($cfgFacebook->valorConfiguracion))) $datos["reseniaFacebook"]  = trim($cfgFacebook->valorConfiguracion);
+        if($cfgInsta    && !empty(trim($cfgInsta->valorConfiguracion)))    $datos["reseniaInstagram"] = trim($cfgInsta->valorConfiguracion);
         $datosRespuesta["codigo"] = 200;
         $datosRespuesta["datos"] = $datos;
       }
