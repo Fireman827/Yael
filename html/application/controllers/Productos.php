@@ -520,9 +520,7 @@ class Productos extends CI_Controller
 						$nModProd = $mp;
 						$idModificadorTipo = $mp->idModificadorTipo;
 						$mod = TraerDatos($this->tablaModificador,array("idModificadorTipo"=>$idModificadorTipo,"estadoModificador"=>"Activo"));
-						if($mod){
-							$nModProd->modificadores = $mod;
-						}
+						$nModProd->modificadores = ($mod) ? $mod : array();
 						array_push($arrayMod,$nModProd);
 					}
 				}
