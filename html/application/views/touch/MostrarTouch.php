@@ -133,8 +133,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									<thead>
 										<tr>
 											<th class="col-1">Cant.</th>
-											<th class="col-7">Producto</th>
+											<th class="col-6">Producto</th>
 											<th class="col-1">Precio</th>
+											<th class="col-1">%</th>
 											<th class="col-1">Inspec.</th>
 											<th class="col-1">Reg.</th>
 										</tr>
@@ -901,6 +902,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 												<label for="pedidosYaPagoProducto">Pedidos Ya</label>
 											</div>
 										</div> -->
+									</div>
+									<div class="row mb-1">
+										<div class="col-12">
+											<button type="button" class="btn btn-info btn-block" id="btnDescuentoEmpleado">
+												<i class="fa fa-user-tag"></i> Descuento Empleado
+											</button>
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

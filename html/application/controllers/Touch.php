@@ -716,9 +716,9 @@ class Touch extends CI_Controller {
 				<div class="card-container mt-2">
 				<div class="card-custom modificador '.$claseSeleccion.'" iteracion="'.$iteracion.'"  style="height:110px;" contenedorli="'.$contenedorli.'"  idProdMod="'.$prod->idProdMod.'" varios="'.$varios.'" idContenedor="'.$id.'" idProdModDet="'.$prod->idProductoModificadorDetalle.'" idMod="'.$prod->idModificador.'" nombre="'.$prod->nombreProductoModificadorDetalle.'" multiseleccion="'.$multiSeleccion.'" maxseleccion="'.$maxSeleccion.'">
 				<input type="hidden" class="aumento" value="'.$prod->aumentoProductoModificadorDetalle.'">
-				<div class="info-card">
-				<p class="nombre" style="font-size: small;">'.$prod->nombreProductoModificadorDetalle.'</p>
-				<p style="font-size: small;">(+'.$prod->aumentoProductoModificadorDetalle.')</p>
+				<div class="info-card" style="display:flex;flex-direction:column;justify-content:space-between;height:100%;">
+				<p class="nombre" style="font-size:small;margin:0;">'.$prod->nombreProductoModificadorDetalle.'</p>
+				<p style="font-size:small;margin:0;">(+'.$prod->aumentoProductoModificadorDetalle.')</p>
 				</div>
 				</div>
 				</div>
@@ -2704,6 +2704,27 @@ class Touch extends CI_Controller {
 											$user = ExistenDatos("usuario",array("codigoUsuario"=>$clave,"autorizadoUsuario"=> "1","idSucursalUsuario"=>$this->session->idSucursal));
 											$user1 = ExistenDatos("usuario",array("codigoAutorizacionUsuario"=>$clave,"autorizadoUsuario"=> "1","idSucursalUsuario"=>$this->session->idSucursal));
 											$datos['bandera'] = ($user == true) ? "1" : ($user1 == true ? "1" : "0");
+											echo json_encode($datos);
+										}
+									}
+									function ValidarEmpleado(){
+										if($this->input->method(TRUE) == "POST"){
+											$codigo = $this->input->post("codigo");
+											$user = TraerUnDato("usuario", array(
+												"codigoUsuario" => $codigo,
+												"activoUsuario" => 1,
+												"idSucursalUsuario" => $this->session->idSucursal
+											));
+											if($user){
+												$pct = GblTraerConfiguracion('DESCUENTO_EMPLEADO_PCT');
+												$datos['bandera'] = "1";
+												$datos['descuento'] = ($pct !== false && $pct !== '') ? $pct : "0";
+												$datos['nombre'] = $user->nombreUsuario;
+											} else {
+												$datos['bandera'] = "0";
+												$datos['descuento'] = "0";
+												$datos['nombre'] = "";
+											}
 											echo json_encode($datos);
 										}
 									}

@@ -1874,6 +1874,7 @@ $(document).on('keydown', '.barcode', function(event) {
               tr += "	<td id='canttxt" + iteracion + "'>1</td>";
               tr += "	<td>" + nombre + "</td>";
               tr += "	<td id='preciotxt" + iteracion + "'>$" + precio + "</td>";
+              tr += ' <td><a class="btn btn-sm btn-block btn-warning btnDescuentoLinea" idt="'+ iteracion +'"><i class="fa fa-percent"></i></a></td>';
               tr += ' <td><a class="btn btn-sm btn-block btn-primary" data-toggle="collapse" href="#ita'+ iteracion +'"><i class="fa fa-eye"></i></a></td>';
               if($("#idUsuarioCorte").val() == $("#idUsuarioSesion").val()){
                 tr += ' <td><div class="icheck-success d-inline"><input type="checkbox" class="regalia" idt="'+ iteracion +'" precio="' + precio + '" id="regalia'+ iteracion +'" ><label for="regalia'+ iteracion +'"></label></div></td>';
@@ -1883,13 +1884,13 @@ $(document).on('keydown', '.barcode', function(event) {
 
               tr += "</tr>";
               tr += "<tr class='sec idt" + iteracion + " hide-table-padding'>";
-              tr += "	<td colspan='5'>";
+              tr += "	<td colspan='6'>";
               tr += "		<div id='ita" + iteracion + "' class='collapse in p-0'>";
               tr += "			<div class=''>";
               tr += "				<div class='input-group'><button class='btn btn-danger btn-sm minus' it='" + iteracion + "'><i class='fa fa-minus'></i></button>";
               tr += "				<input type='hidden' value='"+tipo+"' class='tipoProductoDetalle' id='tipoPD" + iteracion + "'>";
               tr += "				<input type='hidden' value='"+response.cocinero+"' class='cocinero' id='coci" + iteracion + "'>";
-              tr += "					<input type='text' value='1' class='cantidad' regalia='0' idt='" + iteracion + "' precioOriginal='" + precio + "' precio='" + precio + "' style='width:50px; text-align:center;' readonly id='cantidad" + iteracion + "'>";
+              tr += "					<input type='text' value='1' class='cantidad' regalia='0' descuentoLinea='0' idt='" + iteracion + "' precioOriginal='" + precio + "' precio='" + precio + "' style='width:50px; text-align:center;' readonly id='cantidad" + iteracion + "'>";
               tr += "					<button class='btn btn-primary btn-sm plus' it='" + iteracion + "'><i class='fa fa-plus'></i></button>";
               tr += "					<a class='btn btn-danger btn-sm dell' style='margin-left:20px;' idt='" + iteracion + "'><i class='fa fa-trash'></i></a>";
               tr += "				</div>";
@@ -1984,6 +1985,7 @@ $(document).on("click", ".producto", function () {
       tr += "	<td id='canttxt" + iteracion + "'>1</td>";
       tr += "	<td>" + nombre + "</td>";
       tr += "	<td id='preciotxt" + iteracion + "'>$" + precio + "</td>";
+      tr += ' <td><a class="btn btn-sm btn-block btn-warning btnDescuentoLinea" idt="'+ iteracion +'"><i class="fa fa-percent"></i></a></td>';
       tr += ' <td><a class="btn btn-sm btn-block btn-primary" data-toggle="collapse" href="#ita'+ iteracion +'"><i class="fa fa-eye"></i></a></td>';
       if($("#idUsuarioCorte").val() == $("#idUsuarioSesion").val()){
         tr += ' <td><div class="icheck-success d-inline"><input type="checkbox" class="regalia" idt="'+ iteracion +'" precio="' + precio + '" id="regalia'+ iteracion +'" ><label for="regalia'+ iteracion +'"></label></div></td>';
@@ -1993,13 +1995,13 @@ $(document).on("click", ".producto", function () {
 
       tr += "</tr>";
       tr += "<tr class='sec idt" + iteracion + " hide-table-padding'>";
-      tr += "	<td colspan='5'>";
+      tr += "	<td colspan='6'>";
       tr += "		<div id='ita" + iteracion + "' class='collapse in p-0'>";
       tr += "			<div class=''>";
       tr += "				<div class='input-group'><button class='btn btn-danger btn-sm minus' it='" + iteracion + "'><i class='fa fa-minus'></i></button>";
       tr += "				<input type='hidden' value='"+tipo+"' class='tipoProductoDetalle' id='tipoPD" + iteracion + "'>";
       tr += "				<input type='hidden' value='"+response.cocinero+"' class='cocinero' id='coci" + iteracion + "'>";
-      tr += "					<input type='text' value='1' class='cantidad' regalia='0' idt='" + iteracion + "' precioOriginal='" + precio + "' precio='" + precio + "' style='width:50px; text-align:center;' readonly id='cantidad" + iteracion + "'>";
+      tr += "					<input type='text' value='1' class='cantidad' regalia='0' descuentoLinea='0' idt='" + iteracion + "' precioOriginal='" + precio + "' precio='" + precio + "' style='width:50px; text-align:center;' readonly id='cantidad" + iteracion + "'>";
       tr += "					<button class='btn btn-primary btn-sm plus' it='" + iteracion + "'><i class='fa fa-plus'></i></button>";
       tr += "					<a class='btn btn-danger btn-sm dell' style='margin-left:20px;' idt='" + iteracion + "'><i class='fa fa-trash'></i></a>";
       tr += "				</div>";
@@ -2141,9 +2143,11 @@ $(document).on("click", ".modificador", function () {
       var aum =  $(this).attr("aumento");
       nprecio = nprecio + Number.parseFloat(aum);
     });
-    var precio = (Number.parseFloat(precioOriginal) + Number.parseFloat(nprecio));
+    var descLinea = parseFloat($("input[id='cantidad"+(iteracion)+"']").attr("descuentoLinea") || 0);
+    var precio = (Number.parseFloat(precioOriginal) + Number.parseFloat(nprecio)) * (1 - descLinea/100);
     $("input[id='cantidad"+(iteracion)+"']").attr("precio",precio.toFixed(2));
-    $("#preciotxt"+(iteracion)).text("").text("$"+precio.toFixed(2));
+    var labelDesc = descLinea > 0 ? " (-"+descLinea+"%)" : "";
+    $("#preciotxt"+(iteracion)).text("").text("$"+precio.toFixed(2)+labelDesc);
     setTimeout(function(){
       calculoTotal();
     },200);
@@ -4207,7 +4211,7 @@ function imprimirComandaCocina(idPedido){
       }
     },
     error: function(XMLHttpRequest, textStatus, errorThrown){
-      AlertaPersonalizada('error', XMLHttpRequest.responseText);
+      console.error('ImprimirComandaCocina error:', XMLHttpRequest.status, textStatus);
       quitarPreloader();
     }
   });
@@ -4261,3 +4265,85 @@ function quitarPreloader()
     $('.preloader').children().hide();
   }, 500);
 }
+
+// Descuento por línea de carrito
+$(document).on("click", ".btnDescuentoLinea", function(){
+  var iter = $(this).attr("idt");
+  Swal.fire({
+    title: 'Descuento en línea (%)',
+    input: 'text',
+    inputValue: parseFloat($("#cantidad"+iter).attr("descuentoLinea") || 0),
+    showCancelButton: true,
+    confirmButtonText: 'Aplicar',
+    cancelButtonText: 'Cancelar',
+    didOpen: function(){
+      var inp = Swal.getInput();
+      inp.style.color = 'white';
+      inp.style.background = 'transparent';
+      inp.style.border = '1px solid #aaa';
+    },
+    inputValidator: function(value){
+      if(value === '' || isNaN(value)) return 'Ingrese un porcentaje válido';
+      if(parseFloat(value) < 0 || parseFloat(value) > 100) return 'El descuento debe ser entre 0 y 100';
+    }
+  }).then(function(result){
+    if(result.isConfirmed){
+      var pct = parseFloat(result.value);
+      var precioOriginal = parseFloat($("#cantidad"+iter).attr("precioOriginal"));
+      var nprecio = 0;
+      $("li.liContenedorProducto[it='"+iter+"']").each(function(){
+        nprecio += parseFloat($(this).attr("aumento") || 0);
+      });
+      var base = precioOriginal + nprecio;
+      var nuevo = base * (1 - pct/100);
+      $("#cantidad"+iter).attr("descuentoLinea", pct);
+      $("#cantidad"+iter).attr("precio", nuevo.toFixed(2));
+      var labelDesc = pct > 0 ? " (-"+pct+"%)" : "";
+      $("#preciotxt"+iter).text("$"+nuevo.toFixed(2)+labelDesc);
+      setTimeout(function(){ calculoTotal(); }, 200);
+    }
+  });
+});
+
+// Descuento de empleado
+$(document).on("click", "#btnDescuentoEmpleado", function(){
+  var inpt = '<label for="codigoEmpleadoDesc">Ingrese Código del Empleado</label>';
+  inpt += '<div class="input-group mb-3">';
+  inpt += '  <input type="text" class="form-control" id="codigoEmpleadoDesc" placeholder="">';
+  inpt += '</div>';
+  Swal.fire({
+    title: 'Descuento Empleado',
+    html: inpt,
+    showCancelButton: true,
+    confirmButtonText: 'Aplicar',
+    cancelButtonText: 'Cancelar',
+    preConfirm: function(){
+      var codigo = $("#codigoEmpleadoDesc").val();
+      if(!codigo){ Swal.showValidationMessage('Ingrese el código'); return false; }
+      return $.ajax({
+        type: "POST",
+        url: url+"/Touch/ValidarEmpleado",
+        data: {codigo: codigo, csrf_test_name: token},
+        dataType: 'json'
+      }).then(function(resp){ return resp; })
+        .catch(function(){ Swal.showValidationMessage('Error al validar'); });
+    }
+  }).then(function(result){
+    if(result.isConfirmed && result.value){
+      var resp = result.value;
+      if(resp.bandera == "1"){
+        var pct = parseFloat(resp.descuento) || 0;
+        if(pct > 0){
+          $("#descuentoPagoProducto").attr("permiso","1");
+          $("#descpor").html('<a class="btn btn-default descuentopor-opener"><i class="fa fa-keyboard"></i></a>');
+          $("#descuentoPagoProducto").val(pct.toFixed(2)).trigger("change");
+          AlertaPersonalizada('success', 'Descuento '+pct+'% aplicado para '+resp.nombre);
+        } else {
+          AlertaPersonalizada('error', 'El descuento de empleado está configurado en 0%. Actualícelo en Configuraciones.');
+        }
+      } else {
+        AlertaPersonalizada('error', 'Código de empleado no válido');
+      }
+    }
+  });
+});

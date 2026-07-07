@@ -2581,6 +2581,7 @@ class Imprimir extends CI_Controller
   
   function ImprimirComandaCocina(){
     if ($this->input->method(TRUE) == "POST") {
+      ob_start();
       $idPedido = $this->input->post("idPedido");
       $impresoras = TraerDatos("impresora",array('cocinaImpresora'=>'1',"estadoImpresora"=>"Activo","idSucursalImpresora" => $this->session->idSucursal));
       $arrayImpresoras = array();
@@ -2886,7 +2887,11 @@ class Imprimir extends CI_Controller
       $datosRespuesta["datos"] = json_encode($arrayImpresoras);
       $datosRespuesta["servidor"] = json_encode($arrayServidor);
 
-           echo json_encode($datosRespuesta);
+      $strayOutput = ob_get_clean();
+      if($strayOutput){
+        log_message('error','ImprimirComandaCocina stray output: '.substr(strip_tags($strayOutput),0,500));
+      }
+      echo json_encode($datosRespuesta);
     }
   }
 }
