@@ -2,8 +2,7 @@
 function MailSend($tos,$subject,$body,$attachment=array())
 {
   require 'vendor/autoload.php';
-  $cfg = TraerUnDato('configuraciones', "parametroConfiguracion = 'SENDGRID_API_KEY' AND estadoConfiguracion = 'Activo'");
-  $key = $cfg ? $cfg->valorConfiguracion : '';
+  $key = GblTraerConfiguracion('SENDGRID_API_KEY');
   $email = new \SendGrid\Mail\Mail();
   $email->setFrom('reportes@digitalsmindssystems.com', "DTE - DMS");
   $email->setSubject($subject);

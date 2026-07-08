@@ -10,10 +10,6 @@ use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 
-$reseniaGoogle    = isset($_REQUEST['reseniaGoogle'])    ? trim($_REQUEST['reseniaGoogle'])    : '';
-$reseniaFacebook  = isset($_REQUEST['reseniaFacebook'])  ? trim($_REQUEST['reseniaFacebook'])  : '';
-$reseniaInstagram = isset($_REQUEST['reseniaInstagram']) ? trim($_REQUEST['reseniaInstagram']) : '';
-
 $ticket = mb_strtoupper(urldecode($_REQUEST["datos"]));
 $latinchars = array( 'ñ','á','é', 'í', 'ó','ú','ü','Ñ','Á','É','Í','Ó','Ú','Ü');
 $encoded = array("\xa4","\xa0", "\x82","\xa1","\xa2","\xa3", "\x81","\xa5","\xb5","\x90","\xd6","\xe0","\xe9","\x9a");
@@ -49,31 +45,6 @@ $printer->text($cuerpo);
 $printer->setTextSize(2,2);
 $printer->text($pie);
 $printer -> feed(1);
-
-// QR de reseñas — solo si hay URLs configuradas
-if ($reseniaGoogle || $reseniaFacebook || $reseniaInstagram) {
-  $printer->feed(1);
-  $printer->setJustification(Printer::JUSTIFY_CENTER);
-  $printer->setTextSize(1,1);
-  $printer->text("\n--- DEJANOS TU RESENIA ---\n");
-  if ($reseniaGoogle) {
-    $printer->text("Google\n");
-    $printer->qrCode($reseniaGoogle, Printer::QR_ECLEVEL_M, 6, Printer::QR_MODEL_2);
-    $printer->feed(1);
-  }
-  if ($reseniaFacebook) {
-    $printer->text("Facebook\n");
-    $printer->qrCode($reseniaFacebook, Printer::QR_ECLEVEL_M, 6, Printer::QR_MODEL_2);
-    $printer->feed(1);
-  }
-  if ($reseniaInstagram) {
-    $printer->text("Instagram\n");
-    $printer->qrCode($reseniaInstagram, Printer::QR_ECLEVEL_M, 6, Printer::QR_MODEL_2);
-    $printer->feed(1);
-  }
-  $printer->text("Gracias por visitarnos!\n");
-  $printer->feed(1);
-}
 
 $printer -> cut();
 //$printer -> pulse();

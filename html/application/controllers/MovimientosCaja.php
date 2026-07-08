@@ -208,18 +208,16 @@ class MovimientosCaja extends CI_Controller {
         GblPlantilla("plantilla/permiso", array(), array(), "No autorizado");
     } else {
       if($this->input->method(TRUE) == "GET") {
-          if($this->session->admin == '1'){
-            $condicionExiste = array(
-              "estadoCorte" => "Vigente",
-              "idSucursalCorte" => $this->session->idSucursal
-            );
-          } else {
-            $condicionExiste = array(
-              "estadoCorte" => "Vigente",
-              "idUsuarioCorteTurno" => $this->session->idUsuario,
-              "idSucursalCorte" => $this->session->idSucursal
-            );
-          }
+          // $condicionExiste = array(
+          //     "estadoCorte" => "Vigente",
+          //     "idSucursalCorte" => $this->session->idSucursal
+          // );
+          // $existe = ExistenDatos("corteCaja", $condicionExiste);
+          $condicionExiste = array(
+            "estadoCorte" => "Vigente",
+            "idUsuarioCorteTurno" => $this->session->idUsuario,
+            "idSucursalCorte" => $this->session->idSucursal
+          );
           $joinFacDet = array(
             array(
               "tabla" => "corteTurno",
@@ -230,6 +228,7 @@ class MovimientosCaja extends CI_Controller {
           );
           $apertura = TraerUnDatoJoin("corteCaja", $condicionExiste,$joinFacDet,"","corteCaja.idCaja");
           if($apertura){
+            //$apertura = TraerUnDato("corteCaja", $condicionExiste);
             $idCorteCaja = $apertura->idCorteCaja;
             $idCaja = $apertura->idCaja;
             $idTurnoVigente = $apertura->idTurnoVigente;
@@ -299,18 +298,11 @@ class MovimientosCaja extends CI_Controller {
         GblPlantilla("plantilla/permiso", array(), array(), "No autorizado");
     } else {
       if($this->input->method(TRUE) == "GET") {
-          if($this->session->admin == '1'){
-            $condicionExiste = array(
-              "estadoCorte" => "Vigente",
-              "idSucursalCorte" => $this->session->idSucursal
-            );
-          } else {
-            $condicionExiste = array(
-              "estadoCorte" => "Vigente",
-              "idUsuarioCorteTurno" => $this->session->idUsuario,
-              "idSucursalCorte" => $this->session->idSucursal
-            );
-          }
+          $condicionExiste = array(
+            "estadoCorte" => "Vigente",
+            "idUsuarioCorteTurno" => $this->session->idUsuario,
+            "idSucursalCorte" => $this->session->idSucursal
+          );
           $joinFacDet = array(
             array(
               "tabla" => "corteTurno",

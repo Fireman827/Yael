@@ -15,8 +15,8 @@ class Touch extends CI_Controller {
 			GblPlantilla2("plantilla2/permiso",array(),array(),"No autorizado");
 		} else{
 			if($this->input->method(TRUE) == "GET"){
-				// $TraerAperturaActual = TraerUnDatoIndividual("corteCaja","idCorteCaja",array("estadoCorte" => "Vigente"));
-				// if($TraerAperturaActual){
+				$this->load->helper('vfd');
+				vfd_show_welcome();
 
 				$categorias = TraerDatos('productoCategoria',array("estadoProductoCategoria"=>"Activo"));
 				$productos = TraerDatos('producto',array("estadoProducto"=>"Activo"));
@@ -716,9 +716,9 @@ class Touch extends CI_Controller {
 				<div class="card-container mt-2">
 				<div class="card-custom modificador '.$claseSeleccion.'" iteracion="'.$iteracion.'"  style="height:110px;" contenedorli="'.$contenedorli.'"  idProdMod="'.$prod->idProdMod.'" varios="'.$varios.'" idContenedor="'.$id.'" idProdModDet="'.$prod->idProductoModificadorDetalle.'" idMod="'.$prod->idModificador.'" nombre="'.$prod->nombreProductoModificadorDetalle.'" multiseleccion="'.$multiSeleccion.'" maxseleccion="'.$maxSeleccion.'">
 				<input type="hidden" class="aumento" value="'.$prod->aumentoProductoModificadorDetalle.'">
-				<div class="info-card" style="display:flex;flex-direction:column;justify-content:space-between;height:100%;">
-				<p class="nombre" style="font-size:small;margin:0;">'.$prod->nombreProductoModificadorDetalle.'</p>
-				<p style="font-size:small;margin:0;">(+'.$prod->aumentoProductoModificadorDetalle.')</p>
+				<div class="info-card">
+				<p class="nombre" style="font-size: small;">'.$prod->nombreProductoModificadorDetalle.'</p>
+				<p style="font-size: small;">(+'.$prod->aumentoProductoModificadorDetalle.')</p>
 				</div>
 				</div>
 				</div>
@@ -1370,8 +1370,13 @@ class Touch extends CI_Controller {
 			} else if($tipoDoc == "CCF") {
 				$codigoDocumento = "03";
 			}
-			$numeroControl = generarNumeroControl($codigoDocumento,$correlativo);
-			$codigoGeneracion = generarUuid();
+			if($tipoDoc == "FAC" || $tipoDoc == "CCF"){
+				$numeroControl = generarNumeroControl($codigoDocumento,$correlativo);
+				$codigoGeneracion = generarUuid();
+			} else {
+				$numeroControl = "";
+				$codigoGeneracion = "";
+			}
 			$datosFac = array(
 				"tipoFactura" => "Producto",
 				"idCliente" => $idCliente,
@@ -1499,6 +1504,11 @@ class Touch extends CI_Controller {
 							if(GblTraerConfiguracion('DescargaInsumoVenta') == 'Si'){
 								$respuesta['descarga'] = $this->DescargarInsumosPedido($idPedido);
 							}
+							$this->load->helper('vfd');
+							vfd_show_total(
+								'$'.number_format($total, 2),
+								'$'.number_format($vuelto, 2)
+							);
 						}
 						else{
 							DeshacerTransaccion();
@@ -1512,6 +1522,17 @@ class Touch extends CI_Controller {
 					echo json_encode($respuesta);
 				}
 			}
+			public function VfdItem(){
+				if($this->input->method(TRUE) == "POST"){
+					$cantidad = $this->input->post("cantidad");
+					$precio   = $this->input->post("precio");
+					$producto = $this->input->post("producto");
+					$this->load->helper('vfd');
+					vfd_show_product($cantidad, '$'.$precio, $producto);
+				}
+				echo json_encode(["ok" => true]);
+			}
+
 			public function AbrirCuenta(){
 				$cliente = $this->input->post("cliente");
 				$idCliente =  $this->input->post("idCliente");
@@ -2707,53 +2728,31 @@ class Touch extends CI_Controller {
 											echo json_encode($datos);
 										}
 									}
-									function ValidarEmpleado(){
-										if($this->input->method(TRUE) == "POST"){
-											$codigo = $this->input->post("codigo");
-											$user = TraerUnDato("usuario", array(
-												"codigoUsuario" => $codigo,
-												"activoUsuario" => 1,
-												"idSucursalUsuario" => $this->session->idSucursal
-											));
-											if($user){
-												$pct = GblTraerConfiguracion('DESCUENTO_EMPLEADO_PCT');
-												$datos['bandera'] = "1";
-												$datos['descuento'] = ($pct !== false && $pct !== '') ? $pct : "0";
-												$datos['nombre'] = $user->nombreUsuario;
-											} else {
-												$datos['bandera'] = "0";
-												$datos['descuento'] = "0";
-												$datos['nombre'] = "";
-											}
-											echo json_encode($datos);
-										}
-									}
 									function ClienteAutocomplete(){
 										if($this->input->method(TRUE) == "POST"){
 											$busquedaParametro = $this->input->post("query");
-											$sucursal = $this->session->idSucursal;
 
-											$this->db->select('cliente.*, md5(cliente.idCliente) as idmd,
-												FE_CAT_012_Departamento.valores as departamento,
-												FE_CAT_013_Municipio.valores as municipio');
-											$this->db->from('cliente');
-											$this->db->join('FE_CAT_012_Departamento',
-												'CAST(FE_CAT_012_Departamento.codigo AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)', 'left');
-											$this->db->join('FE_CAT_013_Municipio',
-												'CAST(FE_CAT_013_Municipio.codigo AS UNSIGNED) = CAST(cliente.municipioCliente AS UNSIGNED)
-												AND CAST(FE_CAT_013_Municipio.departamento AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)', 'left');
-											$this->db->where('cliente.idSucursalCliente', (int)$sucursal);
-											$this->db->where('cliente.estadoCliente', 'Activo');
-											$this->db->group_start();
-												$this->db->like('cliente.nombreCliente', $busquedaParametro);
-												$this->db->or_like('cliente.duiCliente', $busquedaParametro);
-												$this->db->or_like('cliente.telefonoCliente', $busquedaParametro);
-											$this->db->group_end();
-											$this->db->limit(15);
-											$q = $this->db->get();
-											$Insumos = ($q->num_rows() > 0) ? $q->result() : false;
+											$sucursal = $this->session->idSucursal;
+											$condicionWhere = array('idSucursalCliente' => $sucursal,'estadoCliente' => 'Activo');
+											$condicionLike = array('nombreCliente' => $busquedaParametro);
+											$join=array(
+												array(
+													"tabla" => "FE_CAT_012_Departamento",
+													"condicion" => "CAST(FE_CAT_012_Departamento.codigo AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)",
+													"tipo" => "left",
+													"campos" => "FE_CAT_012_Departamento.valores as departamento, md5(cliente.idCliente) as idmd"
+												),
+												array(
+													"tabla" => "FE_CAT_013_Municipio",
+													"condicion" => "CAST(FE_CAT_013_Municipio.codigo AS UNSIGNED) = CAST(cliente.municipioCliente AS UNSIGNED) AND CAST(FE_CAT_013_Municipio.departamento AS UNSIGNED) = CAST(cliente.departamentoCliente AS UNSIGNED)",
+													"tipo" => "left",
+													"campos" => "FE_CAT_013_Municipio.valores as municipio"
+												),
+											);
+											$Insumos = TraerDatosComo("cliente",$condicionWhere,$condicionLike,$join);
 											echo json_encode($Insumos);
 										}
+
 									}
 
 									function BuscarBarcode()

@@ -600,6 +600,21 @@ CREATE TABLE `cuentasBancarias` (
   `fechaRegistro` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ci_sessions_pedidos`
+--
+
+CREATE TABLE `ci_sessions_pedidos` (
+  `id`         varchar(128) NOT NULL,
+  `ip_address` varchar(45)  NOT NULL,
+  `timestamp`  int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `data`       blob         NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ci_sessions_pedidos_timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
 --
 -- Volcado de datos para la tabla `cuentasBancarias`
 --

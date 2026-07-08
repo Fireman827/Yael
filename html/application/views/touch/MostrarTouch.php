@@ -133,9 +133,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									<thead>
 										<tr>
 											<th class="col-1">Cant.</th>
-											<th class="col-6">Producto</th>
+											<th class="col-7">Producto</th>
 											<th class="col-1">Precio</th>
-											<th class="col-1">%</th>
 											<th class="col-1">Inspec.</th>
 											<th class="col-1">Reg.</th>
 										</tr>
@@ -903,13 +902,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 											</div>
 										</div> -->
 									</div>
-									<div class="row mb-1">
-										<div class="col-12">
-											<button type="button" class="btn btn-info btn-block" id="btnDescuentoEmpleado">
-												<i class="fa fa-user-tag"></i> Descuento Empleado
-											</button>
-										</div>
-									</div>
 									<div class="row">
 										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 											<br>
@@ -1459,24 +1451,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		}, 'json');
 	}
 
-	$('#btnVerificarZonaDelivery').click(function(){
-		$('#resultadoZonaDelivery').empty();
-		$('#modalZonaDelivery').modal('show');
-	});
+	window.addEventListener('load', function(){
+		$('#btnVerificarZonaDelivery').click(function(){
+			$('#resultadoZonaDelivery').empty();
+			$('#modalZonaDelivery').modal('show');
+		});
 
-	$('#modalZonaDelivery').on('shown.bs.modal', function(){
-		inicializarMapaZonaDeliveryTouch();
-		setTimeout(function(){ if(mapaZonaDeliveryTouch) mapaZonaDeliveryTouch.invalidateSize(); }, 200);
-	});
+		$('#modalZonaDelivery').on('shown.bs.modal', function(){
+			inicializarMapaZonaDeliveryTouch();
+			setTimeout(function(){ if(mapaZonaDeliveryTouch) mapaZonaDeliveryTouch.invalidateSize(); }, 200);
+		});
 
-	$('#btnCentrarCoordsZona').click(function(){
-		var partes = $('#coordsZonaDelivery').val().split(',');
-		if(partes.length !== 2){ alert('Formato esperado: latitud, longitud'); return; }
-		var lat = parseFloat(partes[0].trim());
-		var lng = parseFloat(partes[1].trim());
-		if(isNaN(lat) || isNaN(lng)){ alert('Coordenadas inválidas.'); return; }
-		mapaZonaDeliveryTouch.setView([lat, lng], 16);
-		verificarPuntoZonaDeliveryTouch(lat, lng);
+		$('#btnCentrarCoordsZona').click(function(){
+			var partes = $('#coordsZonaDelivery').val().split(',');
+			if(partes.length !== 2){ alert('Formato esperado: latitud, longitud'); return; }
+			var lat = parseFloat(partes[0].trim());
+			var lng = parseFloat(partes[1].trim());
+			if(isNaN(lat) || isNaN(lng)){ alert('Coordenadas inválidas.'); return; }
+			mapaZonaDeliveryTouch.setView([lat, lng], 16);
+			verificarPuntoZonaDeliveryTouch(lat, lng);
+		});
 	});
 </script>
 

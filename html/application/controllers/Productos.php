@@ -248,7 +248,6 @@ class Productos extends CI_Controller
 						"impresoraProducto" => (null !== ($impresora)) ? $impresora : 0,
 						"insumoProducto" => 0,
 						"estadoProducto" => "Activo",
-						"visibleOnlineProducto" => "No",
 					);
 					if($_FILES['imagenProducto']['name'] != ""){
 						$nombreImagen = "_".uniqid();
@@ -520,7 +519,9 @@ class Productos extends CI_Controller
 						$nModProd = $mp;
 						$idModificadorTipo = $mp->idModificadorTipo;
 						$mod = TraerDatos($this->tablaModificador,array("idModificadorTipo"=>$idModificadorTipo,"estadoModificador"=>"Activo"));
-						$nModProd->modificadores = ($mod) ? $mod : array();
+						if($mod){
+							$nModProd->modificadores = $mod;
+						}
 						array_push($arrayMod,$nModProd);
 					}
 				}
@@ -537,7 +538,8 @@ class Productos extends CI_Controller
 							),
 						);
 						$condicion11 = array("idModificador" => $mp->idModificador);
-						$idProductoInsumo = TraerUnDatoIndividual($this->tablaModificador,"idProducto",$condicion11)[0]["idProducto"];
+						$idProductoInsumoRes = TraerUnDatoIndividual($this->tablaModificador,"idProducto",$condicion11);
+						$idProductoInsumo = ($idProductoInsumoRes) ? $idProductoInsumoRes[0]["idProducto"] : '';
 						$condicion111 = array("md5(idProducto)" => $idProducto);
 						$idProductoInsumo2 = TraerUnDatoIndividual($this->tablaProductoInsumo,"idProducto",$condicion111);
 						$idProductoInsumo2 = ($idProductoInsumo2) ? TraerUnDatoIndividual($this->tablaProductoInsumo,"idProducto",$condicion111)[0]["idProducto"] : '';

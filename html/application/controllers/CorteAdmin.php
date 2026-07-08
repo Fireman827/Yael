@@ -1032,6 +1032,8 @@ class CorteAdmin extends CI_Controller {
 						EditarDatos("impresora",array("correlativoImpresora"=>0),array("correlativoImpresora !="=> 0));
 					}
 					EjecutarTransaccion();
+					$this->load->helper('vfd');
+					vfd_show_close();
 					$datosRespuesta["codigo"] = 200;
 					$datosRespuesta["id"] = md5($guardarCorteHistorial);
 				} else {
@@ -1277,6 +1279,8 @@ class CorteAdmin extends CI_Controller {
 						}
 					}
 					EjecutarTransaccion();
+					$this->load->helper('vfd');
+					vfd_show_close();
 					$datosRespuesta["codigo"] = 200;
 				} else {
 					DeshacerTransaccion();

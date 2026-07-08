@@ -63,6 +63,7 @@ $.widget.bridge('uibutton', $.ui.button)
 <script src="<?=base_url();?>/vendors/core/js/main.js"></script>
 
 <!-- notificaciones -->
+<script>const base_url = "<?=base_url();?>";</script>
 <script src="<?=base_url();?>scripts/notificaciones.js"></script>
 
 <script src="<?=base_url()?>/vendors/plugins/dropzone/min/dropzone.min.js"></script>

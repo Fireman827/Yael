@@ -179,23 +179,6 @@
       </div>
     </div>
 
-  </div>
-
-  <div class="row"><div class="col-12">
-    <div class="card card-outline card-warning">
-      <div class="card-header"><h3 class="card-title"><i class="fas fa-star"></i> Reseñas — QR en ticket de cobro</h3></div>
-      <div class="card-body">
-        <p class="text-muted small">Las URLs que ingreses aparecerán como código QR al final del ticket de cobro. El cliente las escanea y va directo a dejar su reseña. Deja en blanco las que no uses.</p>
-        <div class="form-row">
-          <div class="form-group col-md-4"><label class="small text-muted"><i class="fab fa-google"></i> URL de reseñas en Google</label><input type="text" class="form-control form-control-sm cfg-input" name="RESENIA_GOOGLE_URL" value="<?=htmlspecialchars($config['RESENIA_GOOGLE_URL'] ?? '')?>" placeholder="https://g.page/r/..."></div>
-          <div class="form-group col-md-4"><label class="small text-muted"><i class="fab fa-facebook"></i> URL de reseñas en Facebook</label><input type="text" class="form-control form-control-sm cfg-input" name="RESENIA_FACEBOOK_URL" value="<?=htmlspecialchars($config['RESENIA_FACEBOOK_URL'] ?? '')?>" placeholder="https://www.facebook.com/..."></div>
-          <div class="form-group col-md-4"><label class="small text-muted"><i class="fab fa-instagram"></i> URL de perfil en Instagram</label><input type="text" class="form-control form-control-sm cfg-input" name="RESENIA_INSTAGRAM_URL" value="<?=htmlspecialchars($config['RESENIA_INSTAGRAM_URL'] ?? '')?>" placeholder="https://www.instagram.com/..."></div>
-        </div>
-        <button class="btn btn-warning btn-sm" onclick="guardarConfig()"><i class="fas fa-save"></i> Guardar URLs de Reseñas</button>
-      </div>
-    </div>
-  </div></div>
-
   </div></div></section>
 </div>
 <input type="hidden" id="csrf_token_id" value="<?=$this->security->get_csrf_hash()?>">

@@ -238,7 +238,6 @@ $(document).on("click",".ProductoCambiarEstado", function(event){
 	Swal.fire({
 		title: 'Alerta!!',
 		text: "Estas seguro que desea "+ accion+" este registro?!",
-		type: 'warning',
 		icon: 'question',
 		showCancelButton: true,
 		confirmButtonColor: '#3085d6',
@@ -274,7 +273,6 @@ $(document).on("click",".ProductoEliminar", function(event){
 	Swal.fire({
 		title: 'Alerta!!',
 		text: "Estas seguro de eliminar este regitro?!",
-		type: 'error',
 		icon: 'question',
 		target:'#page-top',
 		showCancelButton: true,

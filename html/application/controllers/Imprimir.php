@@ -475,12 +475,6 @@ class Imprimir extends CI_Controller
         $servidor = $impresion->servidorImpresora;
         $datos["ticket"] = urlencode($ticket);
         $datos["servidor"] = $servidor;
-        $cfgGoogle   = TraerUnDato('configuraciones',"parametroConfiguracion='RESENIA_GOOGLE_URL' AND estadoConfiguracion='Activo'");
-        $cfgFacebook = TraerUnDato('configuraciones',"parametroConfiguracion='RESENIA_FACEBOOK_URL' AND estadoConfiguracion='Activo'");
-        $cfgInsta    = TraerUnDato('configuraciones',"parametroConfiguracion='RESENIA_INSTAGRAM_URL' AND estadoConfiguracion='Activo'");
-        if($cfgGoogle   && !empty(trim($cfgGoogle->valorConfiguracion)))   $datos["reseniaGoogle"]    = trim($cfgGoogle->valorConfiguracion);
-        if($cfgFacebook && !empty(trim($cfgFacebook->valorConfiguracion))) $datos["reseniaFacebook"]  = trim($cfgFacebook->valorConfiguracion);
-        if($cfgInsta    && !empty(trim($cfgInsta->valorConfiguracion)))    $datos["reseniaInstagram"] = trim($cfgInsta->valorConfiguracion);
         $datosRespuesta["codigo"] = 200;
         $datosRespuesta["datos"] = $datos;
       }
@@ -2342,9 +2336,9 @@ class Imprimir extends CI_Controller
       }
       echo json_encode($datosRespuesta);
     }
-    //}
+    }
   }
-  
+
 
   ///////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////
@@ -2581,7 +2575,6 @@ class Imprimir extends CI_Controller
   
   function ImprimirComandaCocina(){
     if ($this->input->method(TRUE) == "POST") {
-      ob_start();
       $idPedido = $this->input->post("idPedido");
       $impresoras = TraerDatos("impresora",array('cocinaImpresora'=>'1',"estadoImpresora"=>"Activo","idSucursalImpresora" => $this->session->idSucursal));
       $arrayImpresoras = array();
@@ -2661,6 +2654,31 @@ class Imprimir extends CI_Controller
           $salto = "\n";
           $cuenta = '';
           //-----------------------------------------------------------//
+          // El nombre de la impresora va primero: es lo unico que se imprime
+          // centrado/grande (encabezado), todo lo demas va como detalle
+          // alineado a la izquierda a tamano normal — por eso debe quedar
+          // ANTES del divisor "|" (que separa encabezado de detalle en
+          // imprimir/printComanda.php).
+          $espacios = 15;
+          if($pedido->tipoCuentaPedido != 'local') {
+            $relleno = $espacios - strlen("".$nombreImpresora);
+            $cuenta .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
+            if($iter == 0) $cuentaGlobal .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
+            $cuenta .= $divisor;
+            if($iter == 0) $cuentaGlobal .= $divisor;
+          } else {
+            $relleno = $espacios - strlen("".$nombreImpresora);
+            $cuenta .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
+            if($iter == 0) $cuentaGlobal .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
+
+            $cuenta .= $divisor;
+            if($iter == 0) $cuentaGlobal .= $divisor;
+
+            $relleno = $espacios - strlen("ZONA/MESA: ".$pedido->zonaPedido." - "."MESA # ".$pedido->nombreZonaMesa);
+            $cuenta .= $espacioInicio.str_pad("ZONA/MESA: ".$pedido->zonaPedido." - "."MESA # ".$pedido->nombreZonaMesa,$relleno," ",STR_PAD_RIGHT).$salto;
+            if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("ZONA/MESA: ".$pedido->zonaPedido." - "."MESA # ".$pedido->nombreZonaMesa,$relleno," ",STR_PAD_RIGHT).$salto;
+          }
+
           $espacios = 25;
           $relleno = $espacios - strlen("N: ".strtoupper($impresoraCorrelativo->correlativoImpresora + 1));
           $cuenta .= $espacioInicio.str_pad("N: ".strtoupper($impresoraCorrelativo->correlativoImpresora + 1),$relleno," ",STR_PAD_LEFT).$salto;
@@ -2682,24 +2700,6 @@ class Imprimir extends CI_Controller
           }
 
           $espacios = 15;
-          if($pedido->tipoCuentaPedido != 'local') {
-            $relleno = $espacios - strlen("".$nombreImpresora);
-            $cuenta .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
-            if($iter == 0) $cuentaGlobal .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
-            $cuenta .= $divisor;
-            if($iter == 0) $cuentaGlobal .= $divisor;
-          } else {
-            $relleno = $espacios - strlen("".$nombreImpresora);
-            $cuenta .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
-            if($iter == 0) $cuentaGlobal .= $salto.$espacioInicio.str_pad("".$nombreImpresora,$relleno," ",STR_PAD_BOTH).$salto;
-
-            $cuenta .= $divisor;
-            if($iter == 0) $cuentaGlobal .= $divisor;
-
-            $relleno = $espacios - strlen("ZONA/MESA: ".$pedido->zonaPedido." - "."MESA # ".$pedido->nombreZonaMesa);
-            $cuenta .= $espacioInicio.str_pad("ZONA/MESA: ".$pedido->zonaPedido." - "."MESA # ".$pedido->nombreZonaMesa,$relleno," ",STR_PAD_RIGHT).$salto;
-            if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("ZONA/MESA: ".$pedido->zonaPedido." - "."MESA # ".$pedido->nombreZonaMesa,$relleno," ",STR_PAD_RIGHT).$salto;
-          }
           if($i->pagoImpresora == "1"){
             $estado = ($pedido->estadoPedido == "Finalizado") ? "PAGADO" : "PENDIENTE";
             $relleno = $espacios - strlen("".$estado);
@@ -2729,20 +2729,12 @@ class Imprimir extends CI_Controller
             $cuenta .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
             if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
 
-            $clientedata = ((int)$pedido->idCliente > 0) ? $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]) : false;
-            if(!$clientedata){
-              $online = $this->core->TraerUnDato('pedidoonline',['idPedidoRef' => $pedido->idPedido]);
-              if($online && !empty($online->idClienteAccesoRef)){
-                $acceso = $this->core->TraerUnDato('clienteacceso',['idClienteAcceso' => $online->idClienteAccesoRef]);
-                if($acceso && !empty($acceso->idClienteRef))
-                  $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $acceso->idClienteRef]);
-              }
-            }
-  					if($clientedata && !empty($clientedata->telefonoCliente))
+            $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]);
+  					if($clientedata)
   					{
-              $relleno = $espacios - strlen("TELEFONO: ".$clientedata->telefonoCliente);
-              $cuenta .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
-              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              $relleno = $espacios - strlen("TELFONO: ".$clientedata->telefonoCliente);
+              $cuenta .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
   					}
 
           }
@@ -2756,20 +2748,12 @@ class Imprimir extends CI_Controller
             $cuenta .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
             if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("DIRECCION: ".$pedido->direccionClientePedido,$relleno," ",STR_PAD_RIGHT).$salto;
 
-            $clientedata = ((int)$pedido->idCliente > 0) ? $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]) : false;
-            if(!$clientedata){
-              $online = $this->core->TraerUnDato('pedidoonline',['idPedidoRef' => $pedido->idPedido]);
-              if($online && !empty($online->idClienteAccesoRef)){
-                $acceso = $this->core->TraerUnDato('clienteacceso',['idClienteAcceso' => $online->idClienteAccesoRef]);
-                if($acceso && !empty($acceso->idClienteRef))
-                  $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $acceso->idClienteRef]);
-              }
-            }
-            if($clientedata && !empty($clientedata->telefonoCliente))
+            $clientedata = $this->core->TraerUnDato('cliente',['idCliente' => $pedido->idCliente]);
+            if($clientedata)
   					{
-              $relleno = $espacios - strlen("TELEFONO: ".$clientedata->telefonoCliente);
-              $cuenta .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
-              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELEFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              $relleno = $espacios - strlen("TELFONO: ".$clientedata->telefonoCliente);
+              $cuenta .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
+              if($iter == 0) $cuentaGlobal .= $espacioInicio.str_pad("TELFONO: ".$clientedata->telefonoCliente,$relleno," ",STR_PAD_RIGHT).$salto;
   					}
 
           }
@@ -2887,14 +2871,9 @@ class Imprimir extends CI_Controller
       $datosRespuesta["datos"] = json_encode($arrayImpresoras);
       $datosRespuesta["servidor"] = json_encode($arrayServidor);
 
-      $strayOutput = ob_get_clean();
-      if($strayOutput){
-        log_message('error','ImprimirComandaCocina stray output: '.substr(strip_tags($strayOutput),0,500));
-      }
-      echo json_encode($datosRespuesta);
+           echo json_encode($datosRespuesta);
     }
   }
-}
   public function llamarModificadores($idPedidoDetalle = 0,$espacio = 0,$idReferencia = 0){
 
     $espacioInicio = str_pad(" ",$espacio," ",STR_PAD_BOTH);
