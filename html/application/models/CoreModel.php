@@ -144,15 +144,11 @@ class CoreModel extends CI_Model{
   function EditarDatos($tabla,$datos,$condicion){
     $this->db->set($datos);
     $this->db->where($condicion);
-    $this->db->update($tabla);
-    //Para pruebas retorna la ultima query
-    //return $this->db->last_query();
-    if($this->db->affected_rows() > 0){
-      return true;
-    }
-    // return $this->db->last_query();
-    return false;
-    // return false;
+    // update() ya regresa true/false segun si la consulta se ejecuto sin error.
+    // No usar affected_rows() aqui: MySQL lo deja en 0 cuando el UPDATE corre bien
+    // pero los valores nuevos son identicos a los que ya habia (nada que cambiar),
+    // lo cual se estaba reportando como un guardado fallido aunque no hubo error real.
+    return $this->db->update($tabla);
   }
   //Funcion que elimina datos en una tabla
   function EliminarDatos($tabla,$condicion){

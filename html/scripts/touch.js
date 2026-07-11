@@ -3,6 +3,18 @@ var token = $("#csrf_token_id").val();
 var grupoGeneral = 0;//Variable para saber que grupo de productos el el ultimo
 var grupoActual = 0;//Variable para saber en que grupo de productos en el pedido se encuentra
 
+// Las llamadas al bridge de impresión (imprimir/*.php) van directo al servidor
+// configurado en la impresora, fuera de CodeIgniter, así que no muestran error
+// si esa IP quedó desactualizada (ej. el server cambió de IP por DHCP) — sin esto
+// fallan en silencio y el usuario no se entera de que no imprimió nada.
+function avisarFalloImpresion(servidor) {
+  Swal.fire({
+    title: 'No se pudo imprimir',
+    text: 'No se pudo contactar al servidor de impresión (' + servidor + '). Verifica que esa PC esté encendida, conectada, y que la IP en Impresoras > Servidor de Impresión sea la correcta.',
+    icon: 'error'
+  });
+}
+
 // Llena en cascada el select de Municipio del cobro según el departamento (código FE_CAT_012)
 // seleccionado, y deja seleccionado el municipio indicado (código FE_CAT_013) si se provee.
 function cargarMunicipiosPagoProducto(deptoCodigo, municipioSeleccionado){
@@ -2532,7 +2544,7 @@ $(document).on("click",".accionCuentaDetalle",function(){
                                     productos: server.productos,
                                     encabezado: server.encabezado,
                                     titulo: server.titulo,
-                                  });
+                                  }).fail(function(){ avisarFalloImpresion(server.servidor); });
                                 },500);
                               }
                             });
@@ -4055,7 +4067,7 @@ function imprimirTicketSenorita(idFactura) {
           $.post("http://"+respuesta.servidor+"/imprimir/printSenorita.php", {
             //$.post("http://localhost/imprimir/printSenorita.php", {
             datos: respuesta.datos,
-          });
+          }).fail(function(){ avisarFalloImpresion(respuesta.servidor); });
         },1000);
 
       }
@@ -4085,7 +4097,7 @@ function imprimirTicketProducto(idFactura,vuelto="",efectivo="") {
       if (respuesta.codigo == 200) {
         $.post("http://"+respuesta.datos.servidor+"/imprimir/printTicket.php", {
           datos: respuesta.datos.ticket,
-        });
+        }).fail(function(){ avisarFalloImpresion(respuesta.datos.servidor); });
         setTimeout(function(){
           location.reload();
         },1500);
@@ -4115,7 +4127,7 @@ function imprimirFacturaProducto(idFactura,vuelto="",efectivo="") {
       if (respuesta.codigo == 200) {
         $.post("http://"+respuesta.datos.servidor+"/imprimir/print.php", {
           datos: respuesta.datos.ticket,
-        });
+        }).fail(function(){ avisarFalloImpresion(respuesta.datos.servidor); });
         setTimeout(function(){
           location.reload();
         },1500);
@@ -4144,7 +4156,7 @@ function imprimirTicketMovimientoCaja(idFactura) {
             tipo: respuesta.tipo,
             recurso: respuesta.recurso,
             ip: respuesta.ip,
-          });
+          }).fail(function(){ avisarFalloImpresion(respuesta.servidor); });
         },1000);
         $(".home").click();
       }
@@ -4171,7 +4183,7 @@ function imprimirCuenta(idPedido,prop=""){
           $.post("http://"+respuesta.servidor+"/imprimir/printCuenta.php", {
             //$.post("http://localhost/imprimir/printCuenta.php", {
             datos: respuesta.datos,
-          });
+          }).fail(function(){ avisarFalloImpresion(respuesta.servidor); });
         },1000);
       }
     },
@@ -4198,7 +4210,7 @@ function imprimirComandaCocina(idPedido){
             //console.log(value);
             $.post("http://"+value.servidor+"/imprimir/printComanda.php", {
               datos: value.datos,
-            });
+            }).fail(function(){ avisarFalloImpresion(value.servidor); });
           },500);
         });
         setTimeout(function() {
@@ -4228,7 +4240,7 @@ function reImprimirTicketProducto(idFactura) {
           tipo: respuesta.tipo,
           recurso: respuesta.recurso,
           ip: respuesta.ip,
-        });
+        }).fail(function(){ avisarFalloImpresion(respuesta.servidor); });
 
       }
     },
