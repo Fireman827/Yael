@@ -226,7 +226,7 @@ class Imprimir extends CI_Controller
         $ticket.="PEDIDOS YA  ".str_pad("$".number_format($factura->pedidosYaFactura,2),9," ",STR_PAD_LEFT).$salto;
       }
       if($factura->transferenciaFactura>0){
-        $ticket.="TRANSFERENCIA".str_pad("$".number_format($factura->transferenciaFactura,2),9," ",STR_PAD_LEFT).$salto;
+        $ticket.="TRANSF.     ".str_pad("$".number_format($factura->transferenciaFactura,2),9," ",STR_PAD_LEFT).$salto;
       }
       // $ticket.=" EFECTIVO      ".str_pad("$".number_format($factura->efectivoFactura,2),9," ",STR_PAD_LEFT).$salto;
       $ticket.="CAMBIO      ".str_pad("$".number_format($factura->vueltoFactura,2),9," ",STR_PAD_LEFT).$salto;
@@ -416,7 +416,7 @@ class Imprimir extends CI_Controller
           $ticket.=" PEDIDOS YA    ".str_pad("$".number_format($factura->pedidosYaFactura,2),9," ",STR_PAD_LEFT).$salto;
         }
         if($factura->transferenciaFactura>0){
-          $ticket.=" TRANSFERENCIA ".str_pad("$".number_format($factura->transferenciaFactura,2),9," ",STR_PAD_LEFT).$salto;
+          $ticket.=" TRANSF.       ".str_pad("$".number_format($factura->transferenciaFactura,2),9," ",STR_PAD_LEFT).$salto;
         }
         // $ticket.=" EFECTIVO ".str_pad("$".number_format($factura->efectivoFactura,2),9," ",STR_PAD_LEFT).$salto;
         $ticket.=" CAMBIO        ".str_pad("$".number_format($factura->vueltoFactura,2),9," ",STR_PAD_LEFT).$salto;
@@ -460,7 +460,7 @@ class Imprimir extends CI_Controller
           $ticket.=" PEDIDOS YA    ".str_pad("$".number_format($factura->pedidosYaFactura,2),9," ",STR_PAD_LEFT).$salto;
         }
         if($factura->transferenciaFactura>0){
-          $ticket.=" TRANSFERENCIA ".str_pad("$".number_format($factura->transferenciaFactura,2),9," ",STR_PAD_LEFT).$salto;
+          $ticket.=" TRANSF.       ".str_pad("$".number_format($factura->transferenciaFactura,2),9," ",STR_PAD_LEFT).$salto;
         }
         // $ticket.=" EFECTIVO ".str_pad("$".number_format($factura->efectivoFactura,2),9," ",STR_PAD_LEFT).$salto;
         $ticket.=" CAMBIO        ".str_pad("$".number_format($factura->vueltoFactura,2),9," ",STR_PAD_LEFT).$salto;
@@ -1687,7 +1687,7 @@ class Imprimir extends CI_Controller
       if($factura->transferenciaFactura>0)
       {
         $relleno =15;//strlen("EFECTIVO: ");
-        $servicio .= $espacioInicio.str_pad("TRANSFERENCIA: ",$relleno," ",STR_PAD_RIGHT);
+        $servicio .= $espacioInicio.str_pad("TRANSF.: ",$relleno," ",STR_PAD_RIGHT);
         $relleno =25 + $extraEspacio;//strlen("$".number_format($factura->efectivoFactura,2));
         $servicio .= $espacioInicio.str_pad("$".number_format($factura->transferenciaFactura,2),$relleno," ",STR_PAD_LEFT).$salto;
       }

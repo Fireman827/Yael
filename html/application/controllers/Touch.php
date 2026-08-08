@@ -1468,6 +1468,28 @@ class Touch extends CI_Controller {
 									$respuesta['codigo'] = 502;
 									break;
 								}
+								// Copia el detalle a facturaDetalle (usado por Producto mas vendido,
+								// reportes de venta por item, utilidad por producto, etc.) — antes
+								// solo se guardaba en pedidoDetalle y facturaDetalle quedaba vacia.
+								$datosFacturaDetalleReal = array(
+									"idFactura" => $idFactura,
+									"idProducto" => $ser->idProducto,
+									"idServicio" => 0,
+									"cantidadFacturaDetalle" => $ser->cantidad,
+									"precioUnitarioFacturaDetalle" => $ser->precio,
+									"costoUnitarioFacturaDetalle" => 0,
+									"subTotalFacturaDetalle" => $ser->precio * $ser->cantidad,
+									"descuentoFacturaDetalle" => 0,
+									"comentarioFacturaDetalle" => $ser->comentario,
+									"estadoFacturaDetalle" => "Activo",
+									"aleatorioFacturaDetalle" => uniqid(),
+								);
+								$guardarFacturaDetalle = GuardarDatos("facturaDetalle",$datosFacturaDetalleReal);
+								if(!$guardarFacturaDetalle){
+									$error = true;
+									$respuesta['codigo'] = 506;
+									break;
+								}
 							}
 							else{
 								$error = true;
@@ -1912,6 +1934,28 @@ class Touch extends CI_Controller {
 									$guardarFac = GuardarDatos('factura',$datosFac);
 									if($guardarFac){
 										$idFactura = $guardarFac;
+										// Copia el detalle del pedido a facturaDetalle (usado por Producto mas
+										// vendido, reportes de venta por item, utilidad por producto, etc.) —
+										// antes esta cuenta se facturaba sin dejar nunca detalle en facturaDetalle.
+										$detallePedidoFactura = TraerDatos("pedidoDetalle",array("idPedido" => $idPedido,"estadoPedidoDetalle" => "Activo"));
+										if($detallePedidoFactura){
+											foreach($detallePedidoFactura as $detPed){
+												$datosFacturaDetalleReal = array(
+													"idFactura" => $idFactura,
+													"idProducto" => $detPed->idProductoPedidoDetalle,
+													"idServicio" => 0,
+													"cantidadFacturaDetalle" => $detPed->cantidadPedidoDetalle,
+													"precioUnitarioFacturaDetalle" => $detPed->precioPedidoDetalle,
+													"costoUnitarioFacturaDetalle" => 0,
+													"subTotalFacturaDetalle" => $detPed->precioPedidoDetalle * $detPed->cantidadPedidoDetalle,
+													"descuentoFacturaDetalle" => 0,
+													"comentarioFacturaDetalle" => $detPed->comentarioPedidoDetalle,
+													"estadoFacturaDetalle" => "Activo",
+													"aleatorioFacturaDetalle" => uniqid(),
+												);
+												GuardarDatos("facturaDetalle",$datosFacturaDetalleReal);
+											}
+										}
 										$datosDoc = array(
 											"actualCajaDocumento" => ($actual + 1),
 											'aleatorioCajaDocumento' => uniqid()

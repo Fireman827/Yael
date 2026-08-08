@@ -92,24 +92,37 @@ class Inicio extends CI_Controller {
 			array($idSucursal,$hoy)
 		)->row();
 
-		$ventasTotal      = (float)$ventas->total;
-		$comprasTotal     = (float)$compras->total;
-		$gastosFijosTotal = (float)$gastosFijos->total;
-		$planillaTotal    = (float)$planilla->total;
-		$gastosTotal      = $comprasTotal + $gastosFijosTotal + $planillaTotal;
+		// Mismo dia calendario del año pasado, para comparar el avance de ventas de hoy
+		// contra la meta implicita de "vender igual o mas que ese mismo dia el año pasado".
+		$fechaAnioAnterior = date('Y-m-d', strtotime('-1 year', strtotime($hoy)));
+		$ventasAnioAnterior = $this->db->query(
+			"SELECT COALESCE(SUM(totalFactura),0) AS total FROM factura
+			 WHERE idSucursalFactura = ? AND estadoFactura = 'Cobrado' AND fechaFactura = ?",
+			array($idSucursal,$fechaAnioAnterior)
+		)->row();
+
+		$ventasTotal          = (float)$ventas->total;
+		$comprasTotal         = (float)$compras->total;
+		$gastosFijosTotal     = (float)$gastosFijos->total;
+		$planillaTotal        = (float)$planilla->total;
+		$gastosTotal          = $comprasTotal + $gastosFijosTotal + $planillaTotal;
+		$ventasAnioAnteriorTotal = (float)$ventasAnioAnterior->total;
 
 		return array(
-			'ventas'      => $ventasTotal,
-			'compras'     => $comprasTotal,
-			'gastosFijos' => $gastosFijosTotal,
-			'planilla'    => $planillaTotal,
-			'gastosTotal' => $gastosTotal,
-			'utilidad'    => $ventasTotal - $gastosTotal,
+			'ventas'              => $ventasTotal,
+			'compras'             => $comprasTotal,
+			'gastosFijos'         => $gastosFijosTotal,
+			'planilla'            => $planillaTotal,
+			'gastosTotal'         => $gastosTotal,
+			'utilidad'            => $ventasTotal - $gastosTotal,
 			'topProducto' => $topProducto ? array(
 				'nombre'   => $topProducto->nombre,
 				'imagen'   => $topProducto->imagen,
 				'cantidad' => (float)$topProducto->cantidad,
 			) : null,
+			'fechaAnioAnterior'   => $fechaAnioAnterior,
+			'ventasAnioAnterior'  => $ventasAnioAnteriorTotal,
+			'diferenciaAnio'      => $ventasTotal - $ventasAnioAnteriorTotal,
 		);
 	}
 

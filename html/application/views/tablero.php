@@ -144,6 +144,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			</div>
 		</div>
 
+		<!-- Comparativo de ventas de hoy contra el mismo dia del año pasado -->
+		<div class="row">
+			<div class="col-12">
+				<div class="card card-outline card-secondary mb-2">
+					<div class="card-header py-1"><h6 class="card-title mb-0"><i class="fa fa-calendar-alt"></i> Ventas de hoy vs. mismo día del año pasado</h6></div>
+					<div class="card-body p-2">
+						<div class="row text-center align-items-center">
+							<div class="col-md-3 col-6">
+								<strong class="text-muted" style="font-size:20px;">$<?=number_format($resumenDashboard['ventasAnioAnterior'],2)?></strong><br>
+								<span class="text-muted small">Hace un año (<?=date('d/m/Y', strtotime($resumenDashboard['fechaAnioAnterior']))?>)</span>
+							</div>
+							<div class="col-md-3 col-6">
+								<strong class="text-success" style="font-size:20px;">$<?=number_format($resumenDashboard['ventas'],2)?></strong><br>
+								<span class="text-muted small">Hoy (hasta el momento)</span>
+							</div>
+							<div class="col-md-6 mt-2 mt-md-0">
+								<?php $diferenciaAnio = $resumenDashboard['diferenciaAnio']; ?>
+								<?php if($diferenciaAnio >= 0): ?>
+									<strong class="text-primary" style="font-size:22px;">+$<?=number_format($diferenciaAnio,2)?></strong>
+									<p class="mb-0 small">Vas arriba de lo vendido ese mismo día el año pasado</p>
+								<?php else: ?>
+									<strong class="text-danger" style="font-size:22px;">-$<?=number_format(abs($diferenciaAnio),2)?></strong>
+									<p class="mb-0 small">Faltan para igualar lo vendido ese mismo día el año pasado</p>
+								<?php endif; ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Mapa de pedidos a domicilio del día -->
 		<div class="row">
 			<div class="col-12">
